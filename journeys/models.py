@@ -14,11 +14,9 @@ class Station(models.Model):
 		return "%s, %s, %s, %s" % (self.station_name, self.station_code, self.station_lat, self.station_long)
 	
 class Train(models.Model):
-    train_name = models.CharField(max_length=250)
-    train_code = models.IntegerField(default=0, unique=True)	
-    train_source = models.CharField(max_length=128)
-    train_destination = models.CharField(max_length=128)
-    train_route = models.CharField(max_length=128)
+	train_code = models.IntegerField(unique=True,primary_key=True)
+	train_name = models.CharField(max_length=250)
+	train_route = models.CharField(max_length=2000)
 
-    def __unicode__(self):
-        return self.train_code
+	def __unicode__(self):
+		return "%s, %s, %s" % (self.train_code, self.train_name, self.train_route)
