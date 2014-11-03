@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Stations</title>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGd0G-I1ZepBC2X5oR1DmAJRMS9aPF4G0&sensor=false"></script>
+    </head>
+	<style>
+		#map-canvas {
+    height: 610px;
+	}
+	</style>	
+    <body>
+	<div id="map-canvas"></div>
+	
+  <script type="text/javascript">
+    var locations = [
+	{% for p in stations %}
+      ['{{ p.station_name }}', {{ p.station_lat }},{{ p.station_long }},{{ p.id }}],
+	{% endfor %}
+    ];
+
+    var map = new google.maps.Map(document.getElementById('map-canvas'), {
+      zoom: 5,
+      center: new google.maps.LatLng(28.650825,77.2276),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+  </script>
+  <a href="/entry/add_entry/">Add a New Entry</a>
+  {% for e in entries %}
+      {{ e.train_name }}
+	{% endfor %}
+    </body>
+</html>

@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from entry.forms import EntryForm
+from entry.models import Entries
 
 def add_entry(request):
     # Get the context from the request.
@@ -34,5 +35,7 @@ def add_entry(request):
 def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
-    context = RequestContext(request)
-    return render_to_response('journeys/index.html', 0, context)
+	context = RequestContext(request)
+	journey_list=Entries.objects.all()
+	context_dict = {'entries': journey_list}
+	return render_to_response('entry/index.html', context_dict, context)
