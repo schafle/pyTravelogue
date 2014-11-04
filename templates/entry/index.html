@@ -45,7 +45,10 @@
   </script>
   <a href="/entry/add_entry/">Add a New Entry</a>
   {% for e in entries %}
-      {{ e.train_name }}
+	  {% for d in dojs %}
+		{{ d.date_of_journey }}
+		{{ e.train_name }}
+	{% endfor %}
 	{% endfor %}
     </body>
 </html>

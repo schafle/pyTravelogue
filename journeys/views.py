@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from journeys.models import Station
+from entry.models import Entries
+from django.db.models import Count
 	
 def index(request):
     # Request the context of the request.
@@ -14,7 +16,9 @@ def index(request):
     # Retrieve the top 5 only - or all if less than 5.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
     stations_list=Station.objects.all()
-    context_dict = {'stations': stations_list}
+    #journey_list=Entries.objects.annotate(num_trains=Count('train_name')).order_by('-num_trains')[:]
+    journey_list=Entries.objects.values('train_name').annotate(dcount=Count('train_name'))
+    context_dict = {'stations': stations_list, 'entries':journey_list}
 	
     # Return a rendered response to send to the client.
     # We make use of the shortcut function to make our lives easier.
