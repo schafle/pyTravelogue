@@ -18,7 +18,8 @@ def index(request):
     stations_list=Station.objects.all()
     #journey_list=Entries.objects.annotate(num_trains=Count('train_name')).order_by('-num_trains')[:]
     journey_list=Entries.objects.values('train_name').annotate(dcount=Count('train_name'))
-    context_dict = {'stations': stations_list, 'entries':journey_list}
+    berth_list=Entries.objects.values('berth_selection').annotate(count_berth=Count('berth_selection'))
+    context_dict = {'stations': stations_list, 'entries':journey_list, 'berths':berth_list}
 	
     # Return a rendered response to send to the client.
     # We make use of the shortcut function to make our lives easier.

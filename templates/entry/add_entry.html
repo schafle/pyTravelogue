@@ -1,13 +1,42 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-    <head>
-        <title>Entry</title>
-    </head>
+<head>
+<title>Success</title>
+{% load static %} <!-- New line -->
+<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
 
-    <body>
-        <h1>Add a Category</h1>
+<!-- Custom styles for this template -->
+<link href="{% static "css/traveldataentry.css" %}" rel="stylesheet">
 
-        <form id="entry_form" method="post" action="/entry/add_entry/">
+<!-- Custom styles for this template -->
+<link href="{% static "css/dataentry_form.css" %}" rel="stylesheet">
+
+</head>
+<body onload="">
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">Hello Suraj!</h3>
+              <ul class="nav masthead-nav">
+                <!-- <li><a href="#">Home</a></li> -->
+                <li class="active"><a href="#">Add a Journey</a></li>
+                <li><a href="DisplayAllController">Records</a></li>
+                <li><a href="/journeys/">Statistics</a></li>
+                <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
+                <li><a href="LogoutController">LogOut</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="inner cover">
+            <h1 class="cover-heading">Enter Your Journey Details</h1>
+			<div class="row">
+			<form id="entry_form" method="post" action="/entry/add_entry/">
 			 {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
@@ -19,8 +48,22 @@
 				{{field}} <!-- {{ field.errors }} -->
 				<br>	
             {% endfor %}
-            <input type="submit" name="submit" value="Submit" />
+			<br>
+            <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success">
         </form>
-    </body>
+			</div>
+          </div>
 
+          <div class="mastfoot">
+            <div class="inner">
+              <p></p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+</body>
 </html>

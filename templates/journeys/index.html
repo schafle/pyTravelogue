@@ -20,6 +20,7 @@
     <script>
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart1);
+	  google.setOnLoadCallback(drawChart6);
       /*google.setOnLoadCallback(drawChart2);
       google.setOnLoadCallback(drawChart3);
       google.setOnLoadCallback(drawChart4);
@@ -45,6 +46,23 @@
         var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
         chart.draw(data, options);
       }
+	  function drawChart6() {
+        
+    	 var data = google.visualization.arrayToDataTable([
+          ['Berths', 'Count'],
+			{% for e in berths %}['{{ e.berth_selection }}',{{ e.count_berth }}],{% endfor %}
+		  ]);
+        
+        
+        var options = {
+          //title: 'My berth selections',
+		  legend: 'none'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart6'));
+        chart.draw(data, options);
+      }
+	  
     </script>   
 </head>
 <body>
@@ -59,7 +77,7 @@
               <h3 class="masthead-brand">Hello ${sessionScope['userid']} !</h3>
               <ul class="nav masthead-nav">
                 <li><a href="index.jsp">Home</a></li>
-                <li><a href="success.jsp">Add a Journey</a></li>
+                <li><a href="/entry/add_entry/">Add a Journey</a></li>
                 <li><a href="DisplayAllController">Records</a></li>
                 <li class="active"><a href="DisplayStatisticsController">Statistics</a></li>
                 <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
