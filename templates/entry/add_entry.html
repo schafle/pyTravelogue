@@ -38,10 +38,6 @@
 			<div class="row">
 			<form id="entry_form" method="post" action="/entry/add_entry/">
 			 {% csrf_token %}
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-
             {% for field in form.visible_fields %}
                 <br>
 				{{ field.help_text }}
