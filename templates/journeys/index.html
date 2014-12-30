@@ -20,15 +20,14 @@
     <script>
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart1);
-	  google.setOnLoadCallback(drawChart6);
-      /*google.setOnLoadCallback(drawChart2);
+      google.setOnLoadCallback(drawChart2);
       google.setOnLoadCallback(drawChart3);
       google.setOnLoadCallback(drawChart4);
       google.setOnLoadCallback(drawChart5);
       google.setOnLoadCallback(drawChart6);
       google.setOnLoadCallback(drawChart7);
       google.setOnLoadCallback(drawChart8);
-      google.setOnLoadCallback(drawChart9);*/
+      google.setOnLoadCallback(drawChart9);
       
       function drawChart1() {
         
@@ -46,6 +45,75 @@
         var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
         chart.draw(data, options);
       }
+	  
+	  function drawChart2() {
+        
+    	 var data = google.visualization.arrayToDataTable([
+          ['fromStations', 'Count'],
+			{% for e in from_stations %}['{{ e.from_station }}',{{ e.count_from_stations }}],{% endfor %}
+		  ]);
+        
+        
+        var options = {
+          //title: 'My Top Source stations',
+		  legend: 'none'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+        chart.draw(data, options);
+      }
+	  
+	  function drawChart3() {
+        
+    	 var data = google.visualization.arrayToDataTable([
+          ['ToStations', 'Count'],
+			{% for e in to_stations %}['{{ e.to_station }}',{{ e.count_to_stations }}],{% endfor %}
+		  ]);
+        
+        
+        var options = {
+          //title: 'My Top Destinations',
+		  legend: 'none'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart3'));
+        chart.draw(data, options);
+      }
+	  
+	  function drawChart4() {
+        
+    	 var data = google.visualization.arrayToDataTable([
+          ['Trains', 'Class'],
+			{% for e in class_selection %}['{{ e.class_selection }}',{{ e.count_class_selection }}],{% endfor %}
+		  ]);
+        
+        
+        var options = {
+          //title: 'My Class Preferences',
+		  legend: 'none'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart4'));
+        chart.draw(data, options);
+      }
+	  
+	  function drawChart5() {
+        
+    	 var data = google.visualization.arrayToDataTable([
+          ['Trains', 'Count'],
+			{% for e in entries %}['{{ e.train_name }}',{{ e.dcount }}],{% endfor %}
+		  ]);
+        
+        
+        var options = {
+          //title: 'My Train Preferences',
+		  legend: 'none'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart5'));
+        chart.draw(data, options);
+      }
+	  
 	  function drawChart6() {
         
     	 var data = google.visualization.arrayToDataTable([
@@ -94,7 +162,7 @@
 				<div class="panel-body">
 					<div class="row">
 						<div id="inner-left" class="col-lg-4">
-							<h1><b style="color: #336699; font-size:80px;"><c:out value="${total_distance}"/></b></h1>
+							<h1><b style="color: #336699; font-size:80px;">{{total_distance_travelled}}</b></h1>
 							<h2>Approximate Total distance travelled in km</h2>
 						</div>
 						<div id="inner-centre" class="col-lg-4">

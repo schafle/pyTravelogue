@@ -18,10 +18,24 @@ def index(request):
 	stations_list=Station.objects.all()
 	#journey_list=Entries.objects.annotate(num_trains=Count('train_name')).order_by('-num_trains')[:]
 	journey_list=Entries.objects.values('train_name').annotate(dcount=Count('train_name'))
+	to_station_list=Entries.objects.values('to_station').annotate(count_to_stations=Count('to_station'))
+	from_station_list=Entries.objects.values('from_station').annotate(count_from_stations=Count('from_station'))
+	class_selection_list=Entries.objects.values('class_selection').annotate(count_class_selection=Count('class_selection'))
+	#train_type_list=Entries.objects.values('from_station').annotate(count_from_stations=Count('from_station'))
 	berth_list=Entries.objects.values('berth_selection').annotate(count_berth=Count('berth_selection'))
+	total_distance_travelled=19729
 	number_of_places=Entries.objects.values('to_station').distinct().count()
-	number_of_trains=Entries.objects.count()
-	context_dict = {'stations': stations_list, 'entries':journey_list, 'berths':berth_list, 'number_of_places':number_of_places, 'number_of_trains':number_of_trains}
+	number_of_trains=Entries.objects.values('from_station').distinct().count()
+	context_dict = {
+	'entries':journey_list, 
+	'to_stations':to_station_list,
+	'from_stations':from_station_list,
+	'class_selection':class_selection_list,
+	'berths':berth_list, 
+	'number_of_places':number_of_places, 
+	'number_of_trains':number_of_trains,
+	'total_distance_travelled':total_distance_travelled
+	}
 
 	# Return a rendered response to send to the client.
 	# We make use of the shortcut function to make our lives easier.
