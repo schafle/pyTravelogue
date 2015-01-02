@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from journeys.models import Station
 from entry.models import Entries
 from django.db.models import Count
+from django.db import connections
 	
 def index(request):
 	# Request the context of the request.
@@ -26,6 +27,8 @@ def index(request):
 	total_distance_travelled=19729
 	number_of_places=Entries.objects.values('to_station').distinct().count()
 	number_of_trains=Entries.objects.values('from_station').distinct().count()
+	num_of_journeys_in_a_year=Entries.objects.extra(select={'month': connections[Entries.objects.db].ops.date_trunc_sql('month', 'date_of_journey')}).values('month').annotate(dcount=Count('date_of_journey'))
+	print(num_of_journeys_in_a_year)
 	context_dict = {
 	'entries':journey_list, 
 	'to_stations':to_station_list,
