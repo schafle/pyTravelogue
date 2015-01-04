@@ -3,6 +3,7 @@ import datetime
 # Create your models here.
 
 class Entries(models.Model):
+	id = models.AutoField(primary_key=True)
 	berth_choices =(('L','Lower'),('M','Middle'),('U','Upper'),('SL','SideLower'),('SM','SideMiddle'),('SU','SideUpper'),('Others','Others'))
 	class_choices =(('1-AC','1-AC'),('2-AC','2-AC'),('3-AC','3-AC'),('SL','Sleeper'),('CC','CarChair'),('Others','Others'))
 	train_name = models.CharField(max_length=200)

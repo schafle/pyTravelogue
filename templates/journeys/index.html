@@ -134,13 +134,10 @@
 	  function drawChart7() {
 		  var data = new google.visualization.DataTable();
       data.addColumn('string', 'Year');
-      data.addColumn('number', 'Sales');
+      data.addColumn('number', 'NumberOfJourneys');
 
       data.addRows([
-			['2004',  1000],
-			['2005',  1170],
-			['2006',  660],
-			['2007',  1030],
+			{% for e in number_of_journeys_in_a_year %}['{{ e.year }}',{{ e.all_from }}],{% endfor %}
       ]);
 
       var options = {
@@ -159,11 +156,8 @@
 	  
 	  function drawChart8() {
 		var data = google.visualization.arrayToDataTable([
-			['Year', 'Sales'],
-			['2004',  1000],
-			['2005',  1170],
-			['2006',  660],
-			['2007',  1030],
+			['Month', 'NumberOfJourneys'],
+			{% for e in number_of_journeys_in_a_month %}['{{ e.month }}',{{ e.all_from }}],{% endfor %}
 		  ]);
 
 		  var options = {
@@ -178,11 +172,8 @@
 	  
 	  function drawChart9() {
 		var data = google.visualization.arrayToDataTable([
-			['Year', 'Sales'],
-			['2004',  1000],
-			['2005',  1170],
-			['2006',  660],
-			['2007',  1030],
+			['Weekday', 'NumberOfJourneys'],
+			{% for e in number_of_journeys_in_a_weekday %}['{{ e.day }}',{{ e.all_from }}],{% endfor %}
 		  ]);
 
 		  var options = {
