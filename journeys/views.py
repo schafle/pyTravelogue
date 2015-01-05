@@ -35,6 +35,7 @@ def index(request):
 	
 		
 	context_dict = {
+	'name' : request.user.username,
 	'entries':journey_list, 
 	'to_stations':to_station_list,
 	'from_stations':from_station_list,

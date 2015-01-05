@@ -145,7 +145,7 @@
           title: 'Time'
         },
         vAxis: {
-          title: 'Popularity'
+          title: 'NumberOfJourneys'
         }
       };
 
@@ -162,7 +162,7 @@
 
 		  var options = {
 			title: 'Company Performance',
-			hAxis: {title: 'Year', titleTextStyle: {color: 'red'}}
+			hAxis: {title: 'month', titleTextStyle: {color: 'red'}}
 		  };
 
 		  var chart = new google.visualization.ColumnChart(document.getElementById('bargraph2'));
@@ -178,7 +178,7 @@
 
 		  var options = {
 			title: 'Company Performance',
-			hAxis: {title: 'Year', titleTextStyle: {color: 'red'}}
+			hAxis: {title: 'weekDay', titleTextStyle: {color: 'red'}}
 		  };
 
 		  var chart = new google.visualization.ColumnChart(document.getElementById('bargraph3'));
@@ -197,14 +197,23 @@
 
           <div class="masthead clearfix">
             <div class="inner">
-              <h3 class="masthead-brand">Hello ${sessionScope['userid']} !</h3>
+				{% if user.is_authenticated %}
+					<h3 class="masthead-brand">Hello {{name}} !</h3>
+				{% else %}
+					<h3 class="masthead-brand">Hello NotLoggedInUser !</h3>
+				{% endif %}
               <ul class="nav masthead-nav">
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="/entry/add_entry/">Add a Journey</a></li>
                 <li><a href="DisplayAllController">Records</a></li>
                 <li class="active"><a href="DisplayStatisticsController">Statistics</a></li>
                 <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
-                <li><a href="LogoutController">LogOut</a></li>
+				{% if user.is_authenticated %}
+					 <li><a href="/entry/">Logout</a></li>
+				{% else %}
+					<li><a href="/login/register/">Register Here</a></li>
+					<li><a href="/login/login/">Login</a></li>
+				{% endif %}
               </ul>
             </div>
           </div>
