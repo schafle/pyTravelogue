@@ -11,6 +11,11 @@
 <!-- Custom styles for this template -->
 <link href="{% static "css/dataentry_form.css" %}" rel="stylesheet">
 
+<!-- For Ajax requests -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- <script src="{% static "js/jquery.js" %}"></script> -->
+<script src="{% static "js/rango-ajax.js"%}"></script>
+
 </head>
 <body onload="">
     <div class="site-wrapper">
@@ -20,8 +25,12 @@
         <div class="cover-container">
 
           <div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand">Hello Suraj!</h3>
+            <div class="inner">			  
+			  {% if user.is_authenticated %}
+					<h3 class="masthead-brand">Hello {{name}} !</h3>
+				{% else %}
+					<h3 class="masthead-brand">Hello NotLoggedInUser !</h3>
+				{% endif %}
               <ul class="nav masthead-nav">
                 <!-- <li><a href="#">Home</a></li> -->
                 <li class="active"><a href="#">Add a Journey</a></li>
@@ -38,13 +47,42 @@
 			<div class="row">
 			<form id="entry_form" method="post" action="/entry/add_entry/">
 			 {% csrf_token %}
-            {% for field in form.visible_fields %}
-                <br>
-				{{ field.help_text }}
-				{{field}} <!-- {{ field.errors }} -->
+Train name.
+				<input id="id_train_name" maxlength="128" name="train_name" type="text" /> <!--  -->
 				<br>	
-            {% endfor %}
-			<br>
+				<div id="cats">
+				
+				</div>
+            
+                <br>
+				DOJ
+				<input id="id_date_of_journey" name="date_of_journey" type="text" /> <!--  -->
+				<br>	
+            
+                <br>
+				From
+				<input id="id_from_station" maxlength="4" name="from_station" type="text" /> <!--  -->
+				<br>	
+            
+                <br>
+				To
+				<input id="id_to_station" maxlength="4" name="to_station" type="text" /> <!--  -->
+				<br>	
+            
+                <br>
+				Class
+				<input id="id_class_selection" maxlength="128" name="class_selection" type="text" /> <!--  -->
+				<br>	
+            
+                <br>
+				Berth
+				<input id="id_berth_selection" maxlength="128" name="berth_selection" type="text" /> <!--  -->
+				<br>	
+            
+                <br>
+				Comments
+				<input id="id_comments" maxlength="2000" name="comments" type="text" /> <!--  -->
+				<br>	
             <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success">
         </form>
 			</div>

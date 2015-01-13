@@ -1,0 +1,9 @@
+<ul>
+    {% if train_list %}
+        {% for train in train_list %}
+            <li><option value="{{ train.train_name }}">{{ train.train_name }}</option></li>
+        {% endfor %}
+    {% else %}
+        <li>No categories at present.</li>
+   {% endif %}
+</ul>

@@ -27,7 +27,7 @@ def index(request):
 	berth_list=Entries.objects.values('berth_selection').annotate(count_berth=Count('berth_selection'))
 	total_distance_travelled=19729
 	number_of_places=Entries.objects.values('to_station').distinct().count()
-	number_of_trains=Entries.objects.values('from_station').distinct().count()
+	number_of_trains=Entries.objects.values('train_name').distinct().count()
 	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
 	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
@@ -72,3 +72,8 @@ def query_to_dicts(query_string):
 			i = i+1
 		resultsList.append(d)
 	return resultsList
+	
+def train_types():
+	"""returns a dictionary with types of trains and their count in journey database"""
+	
+	

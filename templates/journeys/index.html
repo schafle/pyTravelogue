@@ -141,6 +141,7 @@
       ]);
 
       var options = {
+		legend: 'none',
         hAxis: {
           title: 'Time'
         },
@@ -157,11 +158,11 @@
 	  function drawChart8() {
 		var data = google.visualization.arrayToDataTable([
 			['Month', 'NumberOfJourneys'],
-			{% for e in number_of_journeys_in_a_month %}['{{ e.month }}',{{ e.all_from }}],{% endfor %}
+			{% for e in number_of_journeys_in_a_month %}['{{ e.months }}',{{ e.all_from }}],{% endfor %}
 		  ]);
 
 		  var options = {
-			title: 'Company Performance',
+			legend: 'none',
 			hAxis: {title: 'month', titleTextStyle: {color: 'red'}}
 		  };
 
@@ -173,11 +174,10 @@
 	  function drawChart9() {
 		var data = google.visualization.arrayToDataTable([
 			['Weekday', 'NumberOfJourneys'],
-			{% for e in number_of_journeys_in_a_weekday %}['{{ e.day }}',{{ e.all_from }}],{% endfor %}
+			{% for e in number_of_journeys_in_a_weekday %}['{{ e.days }}',{{ e.all_from }}],{% endfor %}
 		  ]);
 
 		  var options = {
-			title: 'Company Performance',
 			hAxis: {title: 'weekDay', titleTextStyle: {color: 'red'}}
 		  };
 
