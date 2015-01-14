@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from entry.forms import EntryForm
 from entry.models import Entries
 from journeys.models import Train
+from django.db.models import Q
 
 def add_entry(request):
     # Get the context from the request.
@@ -35,10 +36,12 @@ def add_entry(request):
 
 def get_train_list(max_results=0, starts_with=''):
 	train_list = []
-	if starts_with:
-		train_list = Train.objects.filter(train_name__istartswith=starts_with)
+	if starts_with is not "":
+		#train_list = Train.objects.filter(train_name__istartswith=starts_with)
+		train_list = Train.objects.filter(Q(train_code__istartswith=starts_with) | Q(train_name__istartswith=starts_with)| Q(train_name__contains=starts_with))
 	else:
-		train_list = Train.objects.all()
+		#train_list = Train.objects.all()
+		pass
 
 	if max_results > 0:
 		if len(train_list) > max_results:
