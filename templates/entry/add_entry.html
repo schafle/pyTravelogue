@@ -61,7 +61,7 @@ function () {
 			<div class="row">
 			<form id="entry_form" method="post" action="/entry/add_entry/">
 			 {% csrf_token %}
-Train name.
+				Train name.
 				<input id="id_train_name" maxlength="128" name="train_name" type="text" list="cats"/> <!--  -->
 				<br>	
 				<datalist id="cats">
@@ -74,22 +74,26 @@ Train name.
             
                 <br>
 				From
-				<input id="id_from_station" maxlength="4" name="from_station" type="text" /> <!--  -->
+				<input id="id_from_station" maxlength="4" name="from_station" type="text" list="source"/> <!--  -->
 				<br>	
-            
+				<datalist id="source">
+				</datalist>
+				
                 <br>
 				To
-				<input id="id_to_station" maxlength="4" name="to_station" type="text" /> <!--  -->
+				<input id="id_to_station" maxlength="4" name="to_station" type="text" list="destinations"/> <!--  -->
 				<br>	
-            
+				<datalist id="destinations">
+				</datalist>
+				
                 <br>
 				Class
-				<input id="id_class_selection" maxlength="128" name="class_selection" type="text" /> <!--  -->
+				<input id="id_class_selection" maxlength="128" name="class_selection" type="text" value="3-AC"/> <!--  -->
 				<br>	
             
                 <br>
 				Berth
-				<input id="id_berth_selection" maxlength="128" name="berth_selection" type="text" /> <!--  -->
+				<input id="id_berth_selection" maxlength="128" name="berth_selection" type="text" value="L"/> <!--  -->
 				<br>	
             
                 <br>
@@ -97,7 +101,7 @@ Train name.
 				<input id="id_comments" maxlength="2000" name="comments" type="text" /> <!--  -->
 				<br>	
 				<br>	
-            <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success">
+            <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success" onsubmit="return validateForm()>
         </form>
 			</div>
           </div>
@@ -113,5 +117,8 @@ Train name.
       </div>
 
     </div>
+<script>
+function validateForm() {return false;}
+</script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+<ul>
+    {% if source_dest_list %}
+
+            {% for key, value in source_dest_list.items %}
+				<li><option value="{{key}}">{{value}}</option></li>
+			{% endfor %}
+
+    {% else %}
+        <li>Error. Report Error </li> <!-- TODO: Put a JavaScript pop-up to report error -->
+   {% endif %}
+</ul>

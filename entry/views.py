@@ -6,6 +6,10 @@ from entry.forms import EntryForm
 from entry.models import Entries
 from journeys.models import Train
 from django.db.models import Q
+from django.db import connection
+
+import collections
+import re
 
 def add_entry(request):
     # Get the context from the request.
@@ -38,7 +42,7 @@ def get_train_list(max_results=0, starts_with=''):
 	train_list = []
 	if starts_with is not "":
 		#train_list = Train.objects.filter(train_name__istartswith=starts_with)
-		train_list = Train.objects.filter(Q(train_code__istartswith=starts_with) | Q(train_name__istartswith=starts_with)| Q(train_name__contains=starts_with))
+		train_list = Train.objects.filter(Q(train_name__contains=starts_with) | Q(train_code__istartswith=starts_with) | Q(train_name__istartswith=starts_with))
 	else:
 		#train_list = Train.objects.all()
 		pass
@@ -52,6 +56,27 @@ def get_train_list(max_results=0, starts_with=''):
 
 	return train_list
 
+def get_source_dest_list(starts_with=''):
+	if starts_with != '' and starts_with != ' ':
+		starts_with=str(starts_with)
+		starts_with = starts_with.replace("%[0-9/]" , " ")
+		print(starts_with)
+		source_dest_list=[]
+		cursor = connection.cursor()
+		cursor.execute("select train_route from journeys_train where train_name='"+starts_with+"'")
+		source_dest_list = cursor.fetchall()
+		print(source_dest_list)
+		#source_dest_list=Train.objects.filter(Q(train_route=starts_with))
+		source_dest_str=str(source_dest_list[0][0])
+		source_dest_list=source_dest_str.split(":")
+		print(source_dest_list)
+		index=0		
+		source_dest_dict=collections.OrderedDict()
+		while index < len(source_dest_list):
+			source_dest_dict[source_dest_list[index]]=source_dest_list[index+1]
+			index+=2
+	return source_dest_dict
+
 def suggest_trains(request):
 	context = RequestContext(request)
 	train_list = []
@@ -63,7 +88,18 @@ def suggest_trains(request):
 
 	return render_to_response('entry/train_list.html', {'train_list': train_list }, context)
 
-		
+
+def populate_source_destinations(request):
+	context = RequestContext(request)
+	source_dest_list = []
+	starts_with = ''
+	if request.method == 'GET':
+		starts_with = request.GET['suggestion']
+
+	source_dest_list = get_source_dest_list(starts_with)
+	#source_dest_list=create_list_source_and_destinations(source_to_dest)
+	return render_to_response('entry/source_dest_list.html', {'source_dest_list': source_dest_list }, context)
+	
 def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
