@@ -11,7 +11,7 @@ class Station(models.Model):
 	
 	def __unicode__(self):
 		#return self.station_code
-		return "%s, %s, %s, %s" % (self.station_name, self.station_code, self.station_lat, self.station_long)
+		return "%s, %s, %f, %f" % (self.station_name, self.station_code, self.station_lat, self.station_long)
 	
 class Train(models.Model):
 	train_code = models.IntegerField(unique=True,primary_key=True)

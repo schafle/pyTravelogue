@@ -45,10 +45,14 @@
   </script>
   <a href="/entry/add_entry/">Add a New Entry</a>
   {% for e in entries %}
-	  {% for d in dojs %}
-		{{ d.date_of_journey }}
 		{{ e.train_name }}
-	{% endfor %}
-	{% endfor %}
+		{{ e.date_of_journey }}
+		{{ e.from_station }}
+		{{ e.to_station }}
+		{{ e.class_selection }}
+		{{ e.berth_selection }}
+		{{ e.comments }}
+		</br>
+  {% endfor %}
     </body>
 </html>

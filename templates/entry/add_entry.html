@@ -30,6 +30,11 @@ function () {
     });
   }
 </script>
+<style>
+h1.hidden {
+    display: none;
+}
+</style>
 </head>
 <body onload="">
     <div class="site-wrapper">
@@ -48,7 +53,7 @@ function () {
               <ul class="nav masthead-nav">
                 <!-- <li><a href="#">Home</a></li> -->
                 <li class="active"><a href="#">Add a Journey</a></li>
-                <li><a href="DisplayAllController">Records</a></li>
+                <li><a href="/entry/">Records</a></li>
                 <li><a href="/journeys/">Statistics</a></li>
                 <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
                 <li><a href="LogoutController">LogOut</a></li>
@@ -69,7 +74,7 @@ function () {
             
                 <br>
 				DOJ
-				<input id="id_date_of_journey" name="date_of_journey" type="text"/> <!--  -->
+				<input id="id_date_of_journey" name="date_of_journey" type="date"/> <!--  -->
 				<br>	
             
                 <br>
@@ -101,6 +106,8 @@ function () {
 				<input id="id_comments" maxlength="2000" name="comments" type="text" /> <!--  -->
 				<br>	
 				<br>	
+				<input class="hidden" id="id_distance_covered" name="distance_covered" type="text" value="0" /> <!--  -->
+
             <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success" onsubmit="return validateForm()>
         </form>
 			</div>
