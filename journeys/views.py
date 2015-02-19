@@ -76,4 +76,10 @@ def query_to_dicts(query_string):
 def train_types():
 	"""returns a dictionary with types of trains and their count in journey database"""
 	
-	
+def records(request):
+    # Request the context of the request.
+    # The context contains information such as the client's machine details, for example.
+	context = RequestContext(request)
+	journey_list=Entries.objects.all()
+	context_dict = {'entries': journey_list}
+	return render_to_response('journeys/records.html', context_dict, context)	
