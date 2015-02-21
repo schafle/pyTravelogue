@@ -71,43 +71,44 @@ h1.hidden {
 				<br>	
 				<datalist id="cats">
 				</datalist>
-            
+				<p class="errorlist"></p>
                 <br>
 				DOJ
 				<input id="id_date_of_journey" name="date_of_journey" type="date"/> <!--  -->
 				<br>	
-            
+				<p class="errorlist"></p>
                 <br>
 				From
 				<input id="id_from_station" maxlength="4" name="from_station" type="text" list="source"/> <!--  -->
 				<br>	
 				<datalist id="source">
 				</datalist>
-				
+				<p class="errorlist"></p>
                 <br>
 				To
 				<input id="id_to_station" maxlength="4" name="to_station" type="text" list="destinations"/> <!--  -->
 				<br>	
 				<datalist id="destinations">
 				</datalist>
-				
+				<p class="errorlist"></p>
                 <br>
 				Class
 				<input id="id_class_selection" maxlength="128" name="class_selection" type="text" value="3-AC"/> <!--  -->
 				<br>	
-            
+				<p class="errorlist"></p>
                 <br>
 				Berth
 				<input id="id_berth_selection" maxlength="128" name="berth_selection" type="text" value="L"/> <!--  -->
 				<br>	
-            
+				<p class="errorlist"></p>
                 <br>
 				Comments
 				<input id="id_comments" maxlength="2000" name="comments" type="text" /> <!--  -->
 				<br>	
-				<br>	
-				<input class="hidden" id="id_distance_covered" name="distance_covered" type="text" value="0" /> <!--  -->
-
+				<p class="errorlist"></p>
+				<input class="hidden" id="id_distance_covered" name="distance_covered" type="text" value="100" /> <!--  -->
+				<input class="hidden" id="id_username" maxlength="30" name="username" type="text" value="{{name}}" /> <!--  -->
+				<br>
             <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success" onsubmit="return validateForm()>
         </form>
 			</div>
@@ -125,7 +126,17 @@ h1.hidden {
 
     </div>
 <script>
-function validateForm() {return false;}
+function validateForm() {return true;}
+
+function calculateDistance() {
+	alert("called")
+	var from = document.getElementById("id_from_station");
+	var to = document.getElementById("id_to_station");
+	alert(to)
+	var to = document.getElementById("id_to_station");
+	//elem.value = "My default value";
+}
+
 </script>
 </body>
 </html>

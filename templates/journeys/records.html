@@ -10,25 +10,18 @@
 	
 	<script type="text/javascript" src="js/analytics.js"></script> 
 	<script type="text/javascript" src="js/modernizr.js"></script> 
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script>
 	<title>Responsive Vertical Timeline</title>
 	</head>
 <body>
 	<header>
-		<div class="cd-nugget-info">
-			<a href="">
-				<span>
-				
-				</span>
-				Article &amp; Download
-			</a>
-		</div> <!-- cd-nugget-info -->
-		<h1>Responsive Vertical Timeline</h1>
+		<div  id="map-canvas" style="width: 100%; height: 100%;"> </div>
 	</header>
 
 	<section id="cd-timeline" class="cd-container">
 		<div class="cd-timeline-block">
 			<div class="cd-timeline-img cd-picture">
-				<img src="img/cd-icon-picture.svg" alt="Picture">
+				<img src="img/cd-icon-picture.svg" alt="">
 			</div> <!-- cd-timeline-img -->
 
 			<div class="cd-timeline-content">
@@ -44,7 +37,7 @@ ut.</p>
 
 		<div class="cd-timeline-block">
 			<div class="cd-timeline-img cd-movie">
-				<img src="img/cd-icon-movie.svg" alt="Movie">
+				<img src="img/cd-icon-movie.svg" alt="">
 			</div> <!-- cd-timeline-img -->
 
 			<div class="cd-timeline-content">
@@ -59,7 +52,7 @@ laudantium ipsa ad debitis unde?</p>
 
 		<div class="cd-timeline-block">
 			<div class="cd-timeline-img cd-picture">
-				<img src="img/cd-icon-picture.svg" alt="Picture">
+				<img src="img/cd-icon-picture.svg" alt="">
 			</div> <!-- cd-timeline-img -->
 
 			<div class="cd-timeline-content">
@@ -79,7 +72,7 @@ eveniet eligendi quis fugiat aliquam sunt similique aut adipisci.</p>
 
 		<div class="cd-timeline-block">
 			<div class="cd-timeline-img cd-location">
-				<img src="img/cd-icon-location.svg" alt="Location">
+				<img src="img/cd-icon-location.svg" alt="">
 			</div> <!-- cd-timeline-img -->
 
 			<div class="cd-timeline-content">
@@ -95,7 +88,7 @@ ut.</p>
 
 		<div class="cd-timeline-block">
 			<div class="cd-timeline-img cd-location">
-				<img src="img/cd-icon-location.svg" alt="Location">
+				<img src="img/cd-icon-location.svg" alt="">
 			</div> <!-- cd-timeline-img -->
 
 			<div class="cd-timeline-content">
@@ -108,7 +101,7 @@ ut.</p>
 
 		<div class="cd-timeline-block">
 			<div class="cd-timeline-img cd-movie">
-				<img src="img/cd-icon-movie.svg" alt="Movie">
+				<img src="img/cd-icon-movie.svg" alt="">
 			</div> <!-- cd-timeline-img -->
 
 			<div class="cd-timeline-content">
@@ -120,5 +113,13 @@ ut.</p>
 	</section> <!-- cd-timeline -->
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/main.js"></script> <!-- Resource jQuery -->
-
+<script>
+var map = new google.maps.Map(document.getElementById("map-canvas"), {
+  	zoom: 4,
+  	scrollwheel:false,
+  	center: new google.maps.LatLng(24.730852, 79.278573),
+  	mapTypeId: google.maps.MapTypeId.ROADMAP
+	});
+	
+</script>
 </body></html>

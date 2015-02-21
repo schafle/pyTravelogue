@@ -13,9 +13,10 @@ class Entries(models.Model):
 	class_selection = models.CharField(max_length=6, choices=class_choices)
 	berth_selection = models.CharField(max_length=6, choices=berth_choices)
 	comments = models.CharField(max_length=2000)
-	#distance_covered = models.BigIntegerField(default=0, blank=True, null=True)
+	username = models.CharField(max_length=30)
+	distance_covered = models.BigIntegerField(default=0, blank=True, null=True)
 	
 	def __unicode__(self):
 		#return self.station_code
-		return "%s, %s, %s, %s, %s, %s, %s" % (self.train_name, 
-			self.date_of_journey, self.from_station, self.to_station, self.class_selection, self.berth_selection, self.comments)
+		return "%s, %s, %s, %s, %s, %s, %s, %s, %d" % (self.train_name, 
+			self.date_of_journey, self.from_station, self.to_station, self.class_selection, self.berth_selection, self.comments, self.username, self.distance_covered)

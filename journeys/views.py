@@ -74,7 +74,7 @@ def query_to_dicts(query_string):
 	return resultsList
 	
 def train_types():
-	"""returns a dictionary with types of trains and their count in journey database"""
+	'''returns a dictionary with types of trains and their count in journey database'''
 	
 def records(request):
     # Request the context of the request.

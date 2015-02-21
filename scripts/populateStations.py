@@ -1,15 +1,15 @@
 # Full path and name to your csv file
 csv_filepathname="../data/station_latlong_new.csv"
-# Full path to your django project directory
-#your_djangoproject_home="D://Developement//Website//pyTravelogue//pyTravelogue"
-import os
+
+import os, sys
 SETTINGS_DIR = os.path.dirname(__file__)
 
 PROJECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
 PROJECT_PATH = os.path.abspath(PROJECT_PATH)
-
-import sys,os
 sys.path.append(PROJECT_PATH)
+PROJECT_PATH +="\\pyTravelogue"
+sys.path.append(PROJECT_PATH)
+print(PROJECT_PATH)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 from journeys.models import Station

@@ -16,9 +16,10 @@
 			<a href="/login/login/">Return to the homepage.</a><br />
 			{% else %}
 			
-            {% csrf_token %}
+           
 		  <h2>Register with Travelogue</h2>
 		  <form id="user_form" method="post" action="/login/register/" enctype="multipart/form-data">
+			 {% csrf_token %}
 			<input for="id_username" id="id_username" maxlength="30" type="text" name="username" placeholder="Username" required autofocus/>
 			<input for="id_email" id="id_email" maxlength="75" type="email" name="email" placeholder="EmailID" required/>
 			<input for="id_password" id="id_password" name="password" type="password" placeholder="Password"  required/>
