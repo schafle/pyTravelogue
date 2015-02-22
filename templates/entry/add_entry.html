@@ -80,10 +80,9 @@ h1.hidden {
                 <br>
 				From
 				<input id="id_from_station" maxlength="4" name="from_station" type="text" list="source"/> <!--  -->
-				<br>	
+                <br>
 				<datalist id="source">
 				</datalist>
-				<p class="errorlist"></p>
                 <br>
 				To
 				<input id="id_to_station" maxlength="4" name="to_station" type="text" list="destinations"/> <!--  -->
@@ -106,10 +105,10 @@ h1.hidden {
 				<input id="id_comments" maxlength="2000" name="comments" type="text" /> <!--  -->
 				<br>	
 				<p class="errorlist"></p>
-				<input class="hidden" id="id_distance_covered" name="distance_covered" type="text" value="100" /> <!--  -->
+				<input class="hidden" id="id_distance_covered" name="distance_covered" type="text" value="0" /> <!--  -->
 				<input class="hidden" id="id_username" maxlength="30" name="username" type="text" value="{{name}}" /> <!--  -->
 				<br>
-            <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success" onsubmit="return validateForm()>
+            <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success">
         </form>
 			</div>
           </div>

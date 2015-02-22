@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from journeys.models import Station
 from entry.models import Entries
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.db import connection
 from itertools import *
 
@@ -25,7 +25,7 @@ def index(request):
 	class_selection_list=Entries.objects.values('class_selection').annotate(count_class_selection=Count('class_selection'))
 	#train_type_list=Entries.objects.values('from_station').annotate(count_from_stations=Count('from_station'))
 	berth_list=Entries.objects.values('berth_selection').annotate(count_berth=Count('berth_selection'))
-	total_distance_travelled=19729
+	total_distance_travelled=Entries.objects.aggregate(Sum('distance_covered'))
 	number_of_places=Entries.objects.values('to_station').distinct().count()
 	number_of_trains=Entries.objects.values('train_name').distinct().count()
 	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries group by (select year(date_of_journey)) order by (select year(date_of_journey))")
@@ -43,7 +43,7 @@ def index(request):
 	'berths':berth_list, 
 	'number_of_places':number_of_places, 
 	'number_of_trains':number_of_trains,
-	'total_distance_travelled':total_distance_travelled,
+	'total_distance_travelled':total_distance_travelled['distance_covered__sum'],
 	'number_of_journeys_in_a_year':number_of_journeys_in_a_year,
 	'number_of_journeys_in_a_month':number_of_journeys_in_a_month,
 	'number_of_journeys_in_a_weekday':number_of_journeys_in_a_weekday,
@@ -80,6 +80,6 @@ def records(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
 	context = RequestContext(request)
-	journey_list=Entries.objects.all()
+	journey_list=Entries.objects.all().order_by('-date_of_journey')
 	context_dict = {'entries': journey_list}
 	return render_to_response('journeys/records.html', context_dict, context)	

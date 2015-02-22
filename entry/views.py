@@ -1,5 +1,5 @@
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from entry.forms import EntryForm
@@ -104,4 +104,5 @@ def index(request):
 	context = RequestContext(request)
 	journey_list=Entries.objects.all()
 	context_dict = {'entries': journey_list}
-	return render_to_response('entry/index.html', context_dict, context)
+	#return render_to_response('entry/index.html', context_dict, context)
+	return HttpResponseRedirect('/journeys/')
