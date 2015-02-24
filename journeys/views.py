@@ -33,7 +33,8 @@ def index(request):
 	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
 	longest_journey=Entries.objects.aggregate(Max('distance_covered'))
 	total_number_of_journeys=Entries.objects.count()
-	travelogue_rank=3
+	travelogue_rank_count=3
+	travelogue_rank_distance=1
 	
 		
 	context_dict = {
@@ -51,7 +52,8 @@ def index(request):
 	'number_of_journeys_in_a_weekday':number_of_journeys_in_a_weekday,
 	'longest_journey':longest_journey['distance_covered__max'],
 	'total_number_of_journeys':total_number_of_journeys,
-	'travelogue_rank':travelogue_rank,
+	'travelogue_rank_count':travelogue_rank_count,
+	'travelogue_rank_distance':travelogue_rank_distance,
 	}
 
 	# Return a rendered response to send to the client.

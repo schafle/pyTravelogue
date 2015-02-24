@@ -238,38 +238,24 @@
 							<h2>Number of places you've been to</h2>
 						</div>
 					</div>
-					<!-- <div class="row">
-						<div id="inner-left" class="col-lg-4">
-							<h1><b style="color: #336699; font-size:80px;">{{longest_journey}}</b></h1>
-							<h2>Longest Journey till date</h2>
-						</div>
-						<div id="inner-centre" class="col-lg-4">
-							<h1><b style="color: #336699; font-size:80px;">{{total_number_of_journeys}}</b></h1>
-							<h2>Total number of journeys</h2>
-						</div>
-						<div id="inner-right" class="col-lg-4">
-							<h1><b style="color: #336699; font-size:80px;">{{travelogue_rank}}</b></h1>
-							<h2>Your travelogue Rank</h2>
-						</div>
-					</div> -->
 				</div>
 			</div>
 			
 			<div class="row">
-				<div id="inner-left" class="col-lg-6">
+				<div id="inner-left" class="col-lg-8">
 					<div class="panel panel-info">
 					<div class="panel-heading">
 					<h3>Bird's eye view of your travel</h3>
 					</div>
 					<div class="panel-body">
 						<div class="row">
-							<div  id="map-canvas" style="width: 100%; height: 525px;"> </div>
+							<div  id="map-canvas" style="width: 100%; height: 738px;"> </div>
 						</div>
 					</div>
 					</div>
 				</div>
 				
-				<div id="inner-right" class="col-lg-6">
+				<div id="inner-right" class="col-lg-4">
 					<div class="panel panel-info">
 						<div class="panel-heading">
 							<h3>Longest Journey till date</h3>
@@ -284,9 +270,15 @@
 					</div>
 					<div class="panel panel-info">
 						<div class="panel-heading">
-							<h3>Your travelogue Rank</h3>
+							<h3>Travelogue Rank(Count)</h3>
 						</div>
-						<h1><b style="color: #336699; font-size:80px;">{{travelogue_rank}}</b></h1>
+						<h1><b style="color: #336699; font-size:80px;">{{travelogue_rank_count}}</b></h1>
+					</div>
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Travelogue Rank(Distance)</h3>
+						</div>
+						<h1><b style="color: #336699; font-size:80px;">{{travelogue_rank_distance}}</b></h1>
 					</div>
 				</div>
             </div>
@@ -419,10 +411,10 @@
 	];
 
 	var map = new google.maps.Map(document.getElementById("map-canvas"), {
-  	zoom: 4,
+  	zoom: 5,
   	scrollwheel:false,
-  	center: new google.maps.LatLng(24.730852, 79.278573),
-  	mapTypeId: google.maps.MapTypeId.ROADMAP
+  	center: new google.maps.LatLng(22.830852, 80.278573),
+  	mapTypeId: google.maps.MapTypeId.HYBRID 
 	});
 	
 	for (var i = 0; i < locations_plot.length; i++) {
