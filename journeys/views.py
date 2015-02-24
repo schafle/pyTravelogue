@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from journeys.models import Station
 from entry.models import Entries
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Max
 from django.db import connection
 from itertools import *
 
@@ -26,12 +26,14 @@ def index(request):
 	#train_type_list=Entries.objects.values('from_station').annotate(count_from_stations=Count('from_station'))
 	berth_list=Entries.objects.values('berth_selection').annotate(count_berth=Count('berth_selection'))
 	total_distance_travelled=Entries.objects.aggregate(Sum('distance_covered'))
-	number_of_places=Entries.objects.values('to_station').distinct().count()
+	number_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct().count()
 	number_of_trains=Entries.objects.values('train_name').distinct().count()
 	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
 	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
-	
+	longest_journey=Entries.objects.aggregate(Max('distance_covered'))
+	total_number_of_journeys=Entries.objects.count()
+	travelogue_rank=3
 	
 		
 	context_dict = {
@@ -47,6 +49,9 @@ def index(request):
 	'number_of_journeys_in_a_year':number_of_journeys_in_a_year,
 	'number_of_journeys_in_a_month':number_of_journeys_in_a_month,
 	'number_of_journeys_in_a_weekday':number_of_journeys_in_a_weekday,
+	'longest_journey':longest_journey['distance_covered__max'],
+	'total_number_of_journeys':total_number_of_journeys,
+	'travelogue_rank':travelogue_rank,
 	}
 
 	# Return a rendered response to send to the client.
