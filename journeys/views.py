@@ -19,20 +19,22 @@ def index(request):
 	# Place the list in our context_dict dictionary which will be passed to the template engine.
 	stations_list=Station.objects.all()
 	#journey_list=Entries.objects.annotate(num_trains=Count('train_name')).order_by('-num_trains')[:]
-	journey_list=Entries.objects.values('train_name').annotate(dcount=Count('train_name'))
-	to_station_list=Entries.objects.values('to_station').annotate(count_to_stations=Count('to_station'))
-	from_station_list=Entries.objects.values('from_station').annotate(count_from_stations=Count('from_station'))
-	class_selection_list=Entries.objects.values('class_selection').annotate(count_class_selection=Count('class_selection'))
+	journey_list=Entries.objects.values('train_name').filter(username=request.user.username).annotate(dcount=Count('train_name'))
+	to_station_list=Entries.objects.values('to_station').filter(username=request.user.username).annotate(count_to_stations=Count('to_station'))
+	from_station_list=Entries.objects.values('from_station').filter(username=request.user.username).annotate(count_from_stations=Count('from_station'))
+	class_selection_list=Entries.objects.values('class_selection').filter(username=request.user.username).annotate(count_class_selection=Count('class_selection'))
 	#train_type_list=Entries.objects.values('from_station').annotate(count_from_stations=Count('from_station'))
-	berth_list=Entries.objects.values('berth_selection').annotate(count_berth=Count('berth_selection'))
-	total_distance_travelled=Entries.objects.aggregate(Sum('distance_covered'))
+	berth_list=Entries.objects.values('berth_selection').filter(username=request.user.username).annotate(count_berth=Count('berth_selection'))
+	total_distance_travelled=Entries.objects.filter(username=request.user.username).aggregate(Sum('distance_covered'))
 	number_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct().count()
-	number_of_trains=Entries.objects.values('train_name').distinct().count()
+	name_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct()
+	print(name_of_places)
+	number_of_trains=Entries.objects.values('train_name').filter(username=request.user.username).distinct().count()
 	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
 	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
-	longest_journey=Entries.objects.aggregate(Max('distance_covered'))
-	total_number_of_journeys=Entries.objects.count()
+	longest_journey=Entries.objects.filter(username=request.user.username).aggregate(Max('distance_covered'))
+	total_number_of_journeys=Entries.objects.filter(username=request.user.username).count()
 	travelogue_rank_count=3
 	travelogue_rank_distance=1
 	
@@ -87,6 +89,6 @@ def records(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
 	context = RequestContext(request)
-	journey_list=Entries.objects.all().order_by('-date_of_journey')
+	journey_list=Entries.objects.all().filter(username=request.user.username).order_by('-date_of_journey')
 	context_dict = {'entries': journey_list}
 	return render_to_response('journeys/records.html', context_dict, context)	
