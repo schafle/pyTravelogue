@@ -1,43 +1,5 @@
 /* -------------------------------- 
 
-Primary style
-
--------------------------------- */
-html * {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-*, *:after, *:before {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-body {
-  font-size: 100%;
-  font-family: "Droid Serif", serif;
-  color: #7f8c97;
-  background-color: #e9f0f5;
-}
-
-a {
-  color: #acb7c0;
-  text-decoration: none;
-  font-family: "Open Sans", sans-serif;
-}
-
-img {
-  max-width: 100%;
-}
-
-h1, h2 {
-  font-family: "Open Sans", sans-serif;
-  font-weight: bold;
-}
-
-/* -------------------------------- 
-
 Modules - reusable parts of our design
 
 -------------------------------- */
@@ -70,7 +32,6 @@ xnugget info
 }
 .cd-nugget-info a {
   position: relative;
-  font-size: 14px;
   color: #718ca1;
   -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
@@ -89,130 +50,6 @@ xnugget info
 .cd-nugget-info .cd-nugget-info-arrow {
   fill: #718ca1;
 }
-
-/* -------------------------------- 
-
-xcarbonads 
-
--------------------------------- */
-#carbonads-container {
-  position: fixed;
-  right: 40px;
-  top: 40px;
-  width: 180px;
-  display: none;
-  z-index: 1;
-}
-#carbonads-container .close-carbon-adv {
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  right: 100%;
-  background: rgba(26, 34, 40, 0.8);
-  text-indent: 100%;
-  overflow: hidden;
-  width: 32px;
-  height: 32px;
-  border-radius: 3px 0 0 3px;
-}
-#carbonads-container .close-carbon-adv:hover {
-  background: #1a2228;
-}
-#carbonads-container .close-carbon-adv::after, #carbonads-container .close-carbon-adv::before {
-  content: '';
-  background-color: #fff;
-  height: 2px;
-  width: 14px;
-  position: absolute;
-  top: 14px;
-  left: 9px;
-}
-#carbonads-container .close-carbon-adv::after {
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-#carbonads-container .close-carbon-adv::before {
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-}
-#carbonads-container .carbonad {
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  width: 100%;
-  height: auto;
-  padding: 14px;
-  text-align: center;
-  border-radius: 0 3px 3px 3px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-#carbonads-container .carbonad .carbonad-image img {
-  margin: 0 0 10px 10px;
-}
-#carbonads-container .carbonad .carbonad-text, #carbonads-container .carbonad .carbonad-tag {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-#carbonads-container .carbonad .carbonad-text {
-  display: block;
-  width: 100%;
-  padding: 0;
-}
-#carbonads-container .carbonad .carbonad-text a {
-  color: #c23941;
-  font-size: 13px;
-  font-weight: bold;
-}
-.no-touch #carbonads-container .carbonad .carbonad-text a:hover {
-  text-decoration: underline;
-}
-#carbonads-container .carbonad .carbonad-tag {
-  margin-top: 5px;
-  color: #3a393f;
-}
-#carbonads-container .carbonad .carbonad-tag a {
-  color: #3a393f;
-}
-#carbonads-container .carbonad .carbonad-tag a:hover {
-  color: #c23941;
-}
-@media only screen and (min-width: 1170px) {
-  #carbonads-container {
-    display: block;
-  }
-}
-
-/* -------------------------------- 
-
-Main components 
-
--------------------------------- */
-header {
-  height: 200px;
-  line-height: 200px;
-  text-align: center;
-  background: #303e49;
-}
-header h1 {
-  color: white;
-  font-size: 18px;
-  font-size: 1.125rem;
-}
-@media only screen and (min-width: 1170px) {
-  header {
-    height: 300px;
-    line-height: 300px;
-  }
-  header h1 {
-    font-size: 24px;
-    font-size: 1.5rem;
-  }
-}
-
 #cd-timeline {
   position: relative;
   padding: 2em 0;
@@ -274,7 +111,6 @@ header h1 {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
 }
 .cd-timeline-img img {
   display: block;
@@ -377,9 +213,7 @@ header h1 {
   position: relative;
   margin-left: 60px;
   background: white;
-  border-radius: 0.25em;
   padding: 1em;
-  box-shadow: 0 3px 0 #d7e4ed;
 }
 .cd-timeline-content:after {
   content: "";
@@ -389,10 +223,7 @@ header h1 {
 .cd-timeline-content h2 {
   color: #303e49;
 }
-.cd-timeline-content p, .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
-  font-size: 13px;
-  font-size: 0.8125rem;
-}
+
 .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
   display: inline-block;
 }
@@ -425,20 +256,7 @@ header h1 {
   border: 7px solid transparent;
   border-right: 7px solid white;
 }
-@media only screen and (min-width: 768px) {
-  .cd-timeline-content h2 {
-    font-size: 20px;
-    font-size: 1.25rem;
-  }
-  .cd-timeline-content p {
-    font-size: 16px;
-    font-size: 1rem;
-  }
-  .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
-    font-size: 14px;
-    font-size: 0.875rem;
-  }
-}
+
 @media only screen and (min-width: 1170px) {
   .cd-timeline-content {
     margin-left: 0;
@@ -452,15 +270,13 @@ header h1 {
     border-left-color: white;
   }
   .cd-timeline-content .cd-read-more {
-    float: left;
+    float: right;
   }
   .cd-timeline-content .cd-date {
     position: absolute;
     width: 100%;
     left: 122%;
     top: 6px;
-    font-size: 16px;
-    font-size: 1rem;
   }
   .cd-timeline-block:nth-child(even) .cd-timeline-content {
     float: right;

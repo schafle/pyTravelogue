@@ -18,7 +18,8 @@ def index(request):
 	# Retrieve the top 5 only - or all if less than 5.
 	# Place the list in our context_dict dictionary which will be passed to the template engine.
 	stations_list=Station.objects.all()
-	#journey_list=Entries.objects.annotate(num_trains=Count('train_name')).order_by('-num_trains')[:]
+	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code");
+	lat_long_code_name_arrangment(lat_long_list_of_stations)
 	journey_list=Entries.objects.values('train_name').filter(username=request.user.username).annotate(dcount=Count('train_name'))
 	to_station_list=Entries.objects.values('to_station').filter(username=request.user.username).annotate(count_to_stations=Count('to_station'))
 	from_station_list=Entries.objects.values('from_station').filter(username=request.user.username).annotate(count_from_stations=Count('from_station'))
@@ -81,6 +82,9 @@ def query_to_dicts(query_string):
 			i = i+1
 		resultsList.append(d)
 	return resultsList
+
+def lat_long_code_name_arrangment(query_string):
+	print(query_string)
 	
 def train_types():
 	'''returns a dictionary with types of trains and their count in journey database'''
@@ -90,5 +94,5 @@ def records(request):
     # The context contains information such as the client's machine details, for example.
 	context = RequestContext(request)
 	journey_list=Entries.objects.all().filter(username=request.user.username).order_by('-date_of_journey')
-	context_dict = {'entries': journey_list}
+	context_dict = {'entries': journey_list, 'name' : request.user.username}
 	return render_to_response('journeys/records.html', context_dict, context)	

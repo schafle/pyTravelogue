@@ -1,45 +1,77 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	{% load static %} <!-- New line -->
-	<link href="{% static "css/css.css" %}" rel="stylesheet">
-	<link href="{% static "css/reset.css" %}" rel="stylesheet">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="pragma"        content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-store" />
+
+<!-- Bootstrap core CSS -->
+{% load static %} <!-- New line -->
 	<link href="{% static "css/style.css" %}" rel="stylesheet">
-	
+	<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+	<link href="{% static "css/traveldataentry.css" %}" rel="stylesheet">
 	<script type="text/javascript" src="js/analytics.js"></script> 
-	<script type="text/javascript" src="js/modernizr.js"></script> 
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script>
+	<script type="text/javascript" src="js/modernizr.js"></script>
 	<title>Responsive Vertical Timeline</title>
 	</head>
 <body>
-	<header>
-		<div  id="map-canvas" style="width: 100%; height: 100%;"> </div>
-	</header>
+	<div class="site-wrapper">
 
-	<section id="cd-timeline" class="cd-container">
-		{% for e in entries %}
-		<div class="cd-timeline-block">
-			<div class="cd-timeline-img cd-picture">
-				<img src="img/cd-icon-picture.svg" alt="">
-			</div> <!-- cd-timeline-img -->
+		<div class="site-wrapper-inner">
 
-			<div class="cd-timeline-content">
-				<h2>{{ e.train_name }}</h2>
-				<p>
-					Source Station = {{ e.from_station }} </br>
-					Destination = {{ e.to_station }} </br>
-					Distance Travelled = {{ e.distance_covered }} KM </br>
-					</br>{{ e.comments}}</br>
-					
-				</p>
-				<a href="#0" class="cd-read-more">Read more</a>
-				<span class="cd-date">{{ e.date_of_journey }}</span>
-			</div> <!-- cd-timeline-content -->
-		</div> <!-- cd-timeline-block -->
-		{% endfor %}
-	</section> <!-- cd-timeline -->
+        	<div class="cover-container">
+			 <div class="masthead clearfix">
+            <div class="inner">
+				{% if user.is_authenticated %}
+					<h3 class="masthead-brand">Hello {{name}} !</h3>
+				{% else %}
+					<h3 class="masthead-brand">Hello NotLoggedInUser !</h3>
+				{% endif %}
+              <ul class="nav masthead-nav">
+                <li><a href="index.jsp">Home</a></li>
+                <li><a href="/entry/add_entry/">Add a Journey</a></li>
+                <li class="active"><a href="/journeys/records/">Records</a></li>
+                <li><a href="/journeys/">Statistics</a></li>
+                <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
+				{% if user.is_authenticated %}
+					 <li><a href="/entry/">Logout</a></li>
+				{% else %}
+					<li><a href="/login/register/">Register Here</a></li>
+					<li><a href="/login/login/">Login</a></li>
+				{% endif %}
+              </ul>
+            </div>
+          	</div>
+          	<div class="inner cover">
+			<section id="cd-timeline" class="cd-container">
+				{% for e in entries %}
+				<div class="cd-timeline-block">
+					<div class="cd-timeline-img cd-picture">
+						<!-- <img src="img/cd-icon-picture.svg" alt=""> -->
+					</div> <!-- cd-timeline-img -->
+		
+					<div class="cd-timeline-content">
+						<h3>{{ e.train_name }}</h3>
+						<h4>	
+							Source Station = {{ e.from_station }} </br>
+							Destination = {{ e.to_station }} </br>
+							Distance Travelled = {{ e.distance_covered }} KM </br>
+							</br>{{ e.comments}}</br>
+							
+						</h4>
+						<!--<a href="#0" class="cd-read-more">Read more</a>-->
+						<span class="cd-date">{{ e.date_of_journey }}</span>
+					</div> <!-- cd-timeline-content -->
+				</div> <!-- cd-timeline-block -->
+				{% endfor %}
+			</section> <!-- cd-timeline -->
+			</div>
+			</div>
+		</div>
+	
+	</div>
+
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/main.js"></script> <!-- Resource jQuery -->
 <script>
