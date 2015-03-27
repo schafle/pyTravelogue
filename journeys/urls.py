@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^records/$', views.records, name='records'),
+    url(r'^(?P<user_name_url>\w+)/$', views.user, name='user'),
     )
 	
 	

@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from journeys import views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -17,4 +18,5 @@ urlpatterns = patterns('',
 	url(r'^journeys/', include('journeys.urls')),
 	url(r'^entry/', include('entry.urls')),
 	url(r'^login/', include('login.urls')),
+	url(r'^(?P<user_name_url>\w+)/$', views.user, name='user'),
 )
