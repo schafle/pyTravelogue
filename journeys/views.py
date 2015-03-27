@@ -68,6 +68,8 @@ def user(request,user_name_url):
 	# Request the context of the request.
 	# The context contains information such as the client's machine details, for example.
 	context = RequestContext(request)
+
+	current_user=user_name_url
     
 	# Query the database for a list of ALL categories currently stored.
 	# Order the categories by no. likes in descending order.
@@ -76,28 +78,28 @@ def user(request,user_name_url):
 	stations_list=Station.objects.all()
 	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code");
 	lat_long_code_name_arrangment(lat_long_list_of_stations)
-	journey_list=Entries.objects.values('train_name').filter(username=request.user.username).annotate(dcount=Count('train_name'))
-	to_station_list=Entries.objects.values('to_station').filter(username=request.user.username).annotate(count_to_stations=Count('to_station'))
-	from_station_list=Entries.objects.values('from_station').filter(username=request.user.username).annotate(count_from_stations=Count('from_station'))
-	class_selection_list=Entries.objects.values('class_selection').filter(username=request.user.username).annotate(count_class_selection=Count('class_selection'))
+	journey_list=Entries.objects.values('train_name').filter(username=current_user).annotate(dcount=Count('train_name'))
+	to_station_list=Entries.objects.values('to_station').filter(username=current_user).annotate(count_to_stations=Count('to_station'))
+	from_station_list=Entries.objects.values('from_station').filter(username=current_user).annotate(count_from_stations=Count('from_station'))
+	class_selection_list=Entries.objects.values('class_selection').filter(username=current_user).annotate(count_class_selection=Count('class_selection'))
 	#train_type_list=Entries.objects.values('from_station').annotate(count_from_stations=Count('from_station'))
-	berth_list=Entries.objects.values('berth_selection').filter(username=request.user.username).annotate(count_berth=Count('berth_selection'))
-	total_distance_travelled=Entries.objects.filter(username=request.user.username).aggregate(Sum('distance_covered'))
-	number_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct().count()
-	name_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct()
+	berth_list=Entries.objects.values('berth_selection').filter(username=current_user).annotate(count_berth=Count('berth_selection'))
+	total_distance_travelled=Entries.objects.filter(username=current_user).aggregate(Sum('distance_covered'))
+	number_of_places=Entries.objects.values('to_station').filter(username=current_user).distinct().count()
+	name_of_places=Entries.objects.values('to_station').filter(username=current_user).distinct()
 	print(name_of_places)
-	number_of_trains=Entries.objects.values('train_name').filter(username=request.user.username).distinct().count()
+	number_of_trains=Entries.objects.values('train_name').filter(username=current_user).distinct().count()
 	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
 	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
-	longest_journey=Entries.objects.filter(username=request.user.username).aggregate(Max('distance_covered'))
-	total_number_of_journeys=Entries.objects.filter(username=request.user.username).count()
+	longest_journey=Entries.objects.filter(username=current_user).aggregate(Max('distance_covered'))
+	total_number_of_journeys=Entries.objects.filter(username=current_user).count()
 	travelogue_rank_count=3
 	travelogue_rank_distance=1
 	
 		
 	context_dict = {
-	'name' : request.user.username,
+	'name' : current_user,
 	'entries':journey_list, 
 	'to_stations':to_station_list,
 	'from_stations':from_station_list,
