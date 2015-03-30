@@ -1,0 +1,143 @@
+.form-signin {
+  width: 80%;
+  padding: 10px 10px 10px 10px;
+  margin: auto auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+#berth-input, class-input{
+	position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: 10px;
+}
+
+#terms-and-conditions,#report-error{
+	max-width: 650px;
+	max-height: 500px;
+	padding:30px 30px 30px 30px;
+}
+
+.error-type{
+	font-size:60px;
+}
+textarea#memorable-moments{
+	width:100%;
+	height: 180px;
+}
+
+.ss-q-short{
+	margin-top:20px;
+	margin-bottom:8px;
+	width:100%;
+}
+
+.ss-q-long{
+	margin-top:15px;
+	margin-bottom:15px;
+	width:100%;
+}
+
+#error-message{
+	height:10px;
+	text-align:left;
+	color:red;
+}
+
+#entry_131807497{
+	height: 250px;
+}
+
+#class-input-list li{
+	display:inline;
+	float:left;
+	line-height:50px;
+	font-size: 16px;
+	padding-right:5px;
+}
+#berth-input-list li{
+	display:inline;
+	float:left;
+	line-height:50px;
+	font-size: 16px;
+	padding-right:5px;
+}
+#submit-buuton-input-list li{
+	display:inline;
+	line-height:50px;
+	font-size: 16px;
+	padding-right:5px;
+}
+
+.radio-control {
+width: 25px;
+height: 25px;
+padding: 6px 6px;
+color: #555;
+vertical-align: middle;
+background-color: #fff;
+background-image: none;
+}
+
+#fetch{
+	float:right;
+	 margin-bottom:15px;
+	} 
+
+#PNR{
+	width:75%;
+	float:left;
+}
+
+#pnr-search li{
+	display:inline;
+	padding-bottom:20px;
+	/*
+	padding-left:20%; */
+}
+	
+#seperator{
+	padding-top:20px;
+	padding-bottom:20px;
+}
+
+#trains{
+	width:100%;
+	display: inline-flex;
+	padding-bottom:10px;
+}
+/* #autocomplete1{
+		width:70%;
+	}
+#fetch{
+		width:20%;
+	} 
+#trains{
+	display:inline;
+	float:left;
+} */

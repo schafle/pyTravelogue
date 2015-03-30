@@ -4,16 +4,16 @@ from django.forms.fields import DateField, ChoiceField, MultipleChoiceField
 from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 from django.forms.extras.widgets import SelectDateWidget
 
-BERTH_CHOICES = ('L', 'M', 'U', 'SL','SU','SM', 'Chair')
-COACH_CHOICES = ('1-AC', '2-AC', '3-AC', 'SL', 'CC', '2S', 'Other')
+BERTH_CHOICES = (('L','Lower'),('M','Middle'),('U','Upper'),('SL','SideLower'),('SM','SideMiddle'),('SU','SideUpper'),('Others','Others'))
+COACH_CHOICES = (('1-AC','1-AC'),('2-AC','2-AC'),('3-AC','3-AC'),('SL','Sleeper'),('CC','CarChair'),('Others','Others'))
 							
 class EntryForm(forms.ModelForm):
 	train_name = forms.CharField(max_length=128, help_text="Train name.")
 	date_of_journey = forms.DateField(help_text="DOJ")
 	from_station = forms.CharField(max_length=4, help_text="From")
 	to_station = forms.CharField(max_length=4, help_text="To")
-	class_selection = forms.CharField(max_length=128, help_text="Class")
-	berth_selection = forms.CharField(max_length=128, help_text="Berth")
+	class_selection = forms.ChoiceField(choices=COACH_CHOICES, widget=forms.RadioSelect(), help_text="Class")
+	berth_selection = forms.ChoiceField(choices=BERTH_CHOICES, widget=forms.RadioSelect(), help_text="Berth")
 	comments = forms.CharField(max_length=2000, help_text="Comments")
 	
     # An inline class to provide additional information on the form.

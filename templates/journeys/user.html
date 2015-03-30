@@ -186,9 +186,17 @@
 		  chart.draw(data, options);
       }
 	  
-    </script>   
+    </script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=370684603080544&version=v2.3";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>    	  
 </head>
 <body style="text-align: center;">
+	<div id="fb-root"></div>
 	<div class="site-wrapper">
 
       <div class="site-wrapper-inner">
@@ -221,6 +229,7 @@
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<h3>Your Travelogue</h3>
+					<div class="fb-share-button" data-href="http://localhost:8000/powerfactor/" data-layout="button_count"></div>
 				</div>
 				<div class="panel-body">
 					<div class="row">
