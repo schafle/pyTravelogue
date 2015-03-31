@@ -147,7 +147,7 @@ def train_types(journey_list):
 	train_types_dict={'Rajdhani':0, 'Duronto':0, 'GaribRath':0, 'Shatabdi':0, 'Express':0}
 	train_types_dict_list=[]
 	for train in journey_list:
-		if re.search('Rajdhani', train['train_name']):
+		if re.search('Rajdh', train['train_name']):
 			train_types_dict['Rajdhani']+=train['dcount']
 		elif re.search('Duronto', train['train_name']):
 			train_types_dict['Duronto']+=train['dcount']

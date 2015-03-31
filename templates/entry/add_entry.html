@@ -55,7 +55,7 @@ h1.hidden {
          <div class="inner cover">
             <h1 class="cover-heading">Enter Your Journey Details</h1>
 			<div class="row">
-			<form class="form-signin" name="pnr_form"  METHOD="post" onsubmit="return validateForm()">
+			<form class="form-signin" name="pnr_form"  METHOD="post">
 				<div class="col-lg-12" id="pnr-search-div">
 					<ul id="pnr-search">
 						<li><input type="text" id="PNR" name="PNR" SIZE="20" class="form-control" placeholder="Enter Your PNR or Fill out following fields" required autofocus></li>
@@ -120,6 +120,8 @@ h1.hidden {
 					</div>
 				</p>
 				</div>
+				<input class="hidden" id="id_distance_covered" name="distance_covered" type="text" value="0" />
+				<input class="hidden" id="id_username" maxlength="30" name="username" type="text" value="{{name}}" />
 			</form>
 			</div>
           </div>
