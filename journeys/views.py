@@ -7,6 +7,7 @@ from entry.models import Entries
 from django.db.models import Count, Sum, Max, Avg
 from django.db import connection
 from itertools import *
+import re
 
 def index(request):
 	# Request the context of the request.
@@ -18,8 +19,7 @@ def index(request):
 	# Retrieve the top 5 only - or all if less than 5.
 	# Place the list in our context_dict dictionary which will be passed to the template engine.
 	stations_list=Station.objects.all()
-	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code");
-	lat_long_code_name_arrangment(lat_long_list_of_stations)
+	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code")
 	journey_list=Entries.objects.values('train_name').filter(username=request.user.username).annotate(dcount=Count('train_name'))
 	to_station_list=Entries.objects.values('to_station').filter(username=request.user.username).annotate(count_to_stations=Count('to_station'))
 	from_station_list=Entries.objects.values('from_station').filter(username=request.user.username).annotate(count_from_stations=Count('from_station'))
@@ -29,7 +29,6 @@ def index(request):
 	total_distance_travelled=Entries.objects.filter(username=request.user.username).aggregate(Sum('distance_covered'))
 	number_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct().count()
 	name_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct()
-	print(name_of_places)
 	number_of_trains=Entries.objects.values('train_name').filter(username=request.user.username).distinct().count()
 	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
@@ -38,8 +37,7 @@ def index(request):
 	total_number_of_journeys=Entries.objects.filter(username=request.user.username).count()
 	average_length_of_journeys=Entries.objects.filter(username=request.user.username).aggregate(Avg('distance_covered'))
 	travelogue_rank_distance=1
-	
-		
+	train_types_dict_list=train_types(journey_list)
 	context_dict = {
 	'name' : request.user.username,
 	'entries':journey_list, 
@@ -57,6 +55,8 @@ def index(request):
 	'total_number_of_journeys':total_number_of_journeys,
 	'average_length_of_journeys':int(average_length_of_journeys['distance_covered__avg']),
 	'travelogue_rank_distance':travelogue_rank_distance,
+	'train_types_dict':train_types_dict_list,
+	'lat_long_list_of_stations':lat_long_list_of_stations,
 	}
 
 	# Return a rendered response to send to the client.
@@ -76,8 +76,7 @@ def user(request,user_name_url):
 	# Retrieve the top 5 only - or all if less than 5.
 	# Place the list in our context_dict dictionary which will be passed to the template engine.
 	stations_list=Station.objects.all()
-	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code");
-	lat_long_code_name_arrangment(lat_long_list_of_stations)
+	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code")
 	journey_list=Entries.objects.values('train_name').filter(username=current_user).annotate(dcount=Count('train_name'))
 	to_station_list=Entries.objects.values('to_station').filter(username=current_user).annotate(count_to_stations=Count('to_station'))
 	from_station_list=Entries.objects.values('from_station').filter(username=current_user).annotate(count_from_stations=Count('from_station'))
@@ -87,16 +86,16 @@ def user(request,user_name_url):
 	total_distance_travelled=Entries.objects.filter(username=current_user).aggregate(Sum('distance_covered'))
 	number_of_places=Entries.objects.values('to_station').filter(username=current_user).distinct().count()
 	name_of_places=Entries.objects.values('to_station').filter(username=current_user).distinct()
-	print(name_of_places)
 	number_of_trains=Entries.objects.values('train_name').filter(username=current_user).distinct().count()
 	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
 	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
 	longest_journey=Entries.objects.filter(username=current_user).aggregate(Max('distance_covered'))
 	total_number_of_journeys=Entries.objects.filter(username=current_user).count()
+	average_length_of_journeys=Entries.objects.filter(username=request.user.username).aggregate(Avg('distance_covered'))
 	travelogue_rank_count=3
 	travelogue_rank_distance=1
-	
+	train_types_dict_list=train_types(journey_list)
 		
 	context_dict = {
 	'name' : current_user,
@@ -113,8 +112,10 @@ def user(request,user_name_url):
 	'number_of_journeys_in_a_weekday':number_of_journeys_in_a_weekday,
 	'longest_journey':longest_journey['distance_covered__max'],
 	'total_number_of_journeys':total_number_of_journeys,
-	'travelogue_rank_count':travelogue_rank_count,
+	'average_length_of_journeys':int(average_length_of_journeys['distance_covered__avg']),
 	'travelogue_rank_distance':travelogue_rank_distance,
+	'train_types_dict':train_types_dict_list,
+	'lat_long_list_of_stations':lat_long_list_of_stations,
 	}
 
 	# Return a rendered response to send to the client.
@@ -140,12 +141,25 @@ def query_to_dicts(query_string):
 			i = i+1
 		resultsList.append(d)
 	return resultsList
-
-def lat_long_code_name_arrangment(query_string):
-	print(query_string)
 	
-def train_types():
+def train_types(journey_list):
 	'''returns a dictionary with types of trains and their count in journey database'''
+	train_types_dict={'Rajdhani':0, 'Duronto':0, 'GaribRath':0, 'Shatabdi':0, 'Express':0}
+	train_types_dict_list=[]
+	for train in journey_list:
+		if re.search('Rajdhani', train['train_name']):
+			train_types_dict['Rajdhani']+=train['dcount']
+		elif re.search('Duronto', train['train_name']):
+			train_types_dict['Duronto']+=train['dcount']
+		elif re.search('Garib', train['train_name']):
+			train_types_dict['GaribRath']+=train['dcount']
+		elif re.search('Shat', train['train_name']) and re.search('bdi', train['train_name']):
+			train_types_dict['Shatabdi']+=train['dcount']
+		else:
+			train_types_dict['Express']+=train['dcount']
+	for keys, values in train_types_dict.items():
+		train_types_dict_list+=[{'train_type':keys, 'count':values}]
+	return train_types_dict_list
 	
 def records(request):
     # Request the context of the request.
