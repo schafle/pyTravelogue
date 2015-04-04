@@ -11,7 +11,7 @@ from django.db import connection
 import collections
 import re
 
-def add_entry(request):
+def index(request):
 	# Get the context from the request.
 	context = RequestContext(request)
 	# A HTTP POST?
@@ -98,11 +98,3 @@ def populate_source_destinations(request):
 	#source_dest_list=create_list_source_and_destinations(source_to_dest)
 	return render_to_response('entry/source_dest_list.html', {'source_dest_list': source_dest_list }, context)
 	
-def index(request):
-    # Request the context of the request.
-    # The context contains information such as the client's machine details, for example.
-	context = RequestContext(request)
-	journey_list=Entries.objects.all()
-	context_dict = {'entries': journey_list}
-	#return render_to_response('entry/index.html', context_dict, context)
-	return HttpResponseRedirect('/journeys/')

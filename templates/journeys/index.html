@@ -200,7 +200,7 @@
 				{% if user.is_authenticated %}
 					<h3 class="masthead-brand">Hello {{name}} !</h3>
 				{% else %}
-					<h3 class="masthead-brand">Hello NotLoggedInUser !</h3>
+					<h3 class="masthead-brand">Hello Guest !</h3>
 				{% endif %}
               <ul class="nav masthead-nav">
                 <li><a href="/{{name}}">Share</a></li>
@@ -209,7 +209,7 @@
                 <li class="active"><a href="DisplayStatisticsController">Statistics</a></li>
                 <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
 				{% if user.is_authenticated %}
-					 <li><a href="/entry/">Logout</a></li>
+					 <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
 				{% else %}
 					<li><a href="/login/register/">Register Here</a></li>
 					<li><a href="/login/login/">Login</a></li>
@@ -217,7 +217,7 @@
               </ul>
             </div>
           </div>
-  
+  		{% if user.is_authenticated %}
         <div class="inner cover">
 			<div class="panel panel-info">
 				<div class="panel-heading">
@@ -393,7 +393,11 @@
           </div>
 
         </div>
-
+		{% else %}
+		<div class="inner cover">
+			<h1>Please login</h1> 
+		</div>
+		{% endif %}
       </div>
 
     </div>

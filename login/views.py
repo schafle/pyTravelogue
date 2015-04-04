@@ -9,6 +9,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
+def index(request):
+    return render_to_response('login/index.html')
+    
 def register(request):
     # Like before, get the request's context.
     context = RequestContext(request)

@@ -1,42 +1,10 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
 <head>
-	<title>Travelogue.com</title>
-	<!-- Bootstrap core CSS -->
-	{% load static %} <!-- New line -->
-	<!-- Custom styles for this template -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
-	<link href="{% static "css/signin.css" %}" rel="stylesheet">
+    <title>My Home Page</title>          
+ 
 </head>
-
-    <body>
-{% block main %}
- <div>
- <h1>Third-party authentication demo</h1>
-
- <p>
-   <ul>
-   {% if user and not user.is_anonymous %}
-     <li>
-       <a>Hello {{ user.get_full_name|default:user.username }}!</a>
-     </li>
-     <li>
-       <a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>
-     </li>
-   {% else %}
-     <li>
-       <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
-     </li>
-     <li>
-       <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
-     </li>
-     <li>
-       <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a>
-     </li>
-   {% endif %}
-   </ul>
- </p>
- </div>
-{% endblock %}
-    </body>
+<body>
+<p>My Content</p>    
+</body>
 </html>
