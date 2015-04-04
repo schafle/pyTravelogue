@@ -18,5 +18,8 @@ urlpatterns = patterns('',
 	url(r'^journeys/', include('journeys.urls')),
 	url(r'^entry/', include('entry.urls')),
 	url(r'^login/', include('login.urls')),
-	url(r'^(?P<user_name_url>\w+)/$', views.user, name='user'),
+	url(r'^user/(?P<user_name_url>\w+)/$', views.user, name='user'),
+	#url(r'^$', 'login.views.user_login', name='home'), #make this the home page
+	url('', include('social.apps.django_app.urls', namespace='social')),
+	url('', include('social.apps.django_app.urls', namespace='auth')),
 )

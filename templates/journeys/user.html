@@ -212,10 +212,9 @@
 				{% endif %}
               <ul class="nav masthead-nav">
 			  {% if user.is_authenticated %}
-                <li><a href="index.jsp">Home</a></li>
                 <li><a href="/entry/add_entry/">Add a Journey</a></li>
                 <li><a href="/journeys/records/">Records</a></li>
-                <li class="active"><a href="DisplayStatisticsController">Statistics</a></li>
+                <li><a href="/journeys/">Statistics</a></li>
 				<li><a href="/entry/">Logout</a></li>
 			  {% else %}
 				<li><a href="/login/register/">Register Here</a></li>

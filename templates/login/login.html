@@ -7,6 +7,7 @@
 	<!-- Custom styles for this template -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 	<link href="{% static "css/signin.css" %}" rel="stylesheet">
+	<link href="{% static "css/buttons-si.css" %}" rel="stylesheet">
 </head>
 
     <body>
@@ -21,6 +22,19 @@
 
             <input class="btn btn-lg btn-primary btn-block" type="submit" value="submit" />
         </form>
+       </br>
+        {% block main %}
+ <div>
+   {% if user and not user.is_anonymous %}
+       <a>Hello {{ user.get_full_name|default:user.username }}!</a>
+       <a class="btn" href="{% url 'logout' %}?next={{ request.path }}">Logout</a>
+   {% else %}
+       <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}"><button class="btn-si btn-facebook">Login with Facebook</button></a>
+       <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}"><button class="btn-si btn-google">Login with Google</button></a>
+       <!-- <a class="btn-si btn-twitter" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a> -->
+   {% endif %}
+ </div>
+{% endblock %}
 		</div>
     </body>
 </html>

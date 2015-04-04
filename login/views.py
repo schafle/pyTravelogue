@@ -116,4 +116,11 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/entry/')
+    return HttpResponseRedirect('/login/login')
+
+def home(request):
+   context = RequestContext(request,
+                           {'request': request,
+                            'user': request.user})
+   return render_to_response('login/home.html',
+                             context_instance=context)
