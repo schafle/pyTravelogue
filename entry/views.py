@@ -34,7 +34,7 @@ def index(request):
 
 	# Bad form (or form details), no form supplied...
 	# Render the form with error messages (if any).
-	return render_to_response('entry/add_entry.html', {'form': form, 'name' : request.user.username}, context)
+	return render_to_response('entry/index.html', {'form': form, 'name' : request.user.username}, context)
 
 def get_train_list(max_results=0, starts_with=''):
 	train_list = []

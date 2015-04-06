@@ -169,7 +169,8 @@ def records(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
 	context = RequestContext(request)
-	journey_list=Entries.objects.all().filter(username=request.user.username).order_by('-date_of_journey')
+	journey_list=Entries.objects.values('train_name','from_station','to_station','distance_covered','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
 	context_dict = {'entries': journey_list, 'name' : request.user.username}
-	print(journey_list)
-	return render_to_response('journeys/records.html', context_dict, context)	
+	return render_to_response('journeys/records.html', context_dict, context)
+
+#def 

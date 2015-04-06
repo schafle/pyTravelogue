@@ -1,10 +1,124 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
-<head>
-    <title>My Home Page</title>          
- 
+<!DOCTYPE html>
+<html >
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Welcome to Travelogue</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=IE8">
+    <meta name="description" content="">
+    <meta name="application-name" content="Travelogue">
+    <meta name="msapplication-tooltip" content="Travelogue">
+    {% load static %} <!-- New line -->
+	<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+	<link href="{% static "css/homepage.css" %}" rel="stylesheet">
 </head>
-<body>
-<p>My Content</p>    
-</body>
-</html>
+<body>	
+
+	<div id="warning-message">
+		You may need a newer browser for this site to function properly. Consider upgrading to the newest version of <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">Internet Explorer</a> or <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>.
+	</div>
+
+	<!-- welcome -->
+	<section class="page-section-gray" id="welcome" class="container">
+		<div id="questions" class="questions-columns row">
+		<div class="subsection-title row">
+			<h2 class="title">Travelogue</h2>
+			<h3 style="width: 100%; text-align: center; margin: 2em 0em 0em 0em; ">
+			Travelogue is an application where one can log h[is/er] train journeys, maintain details of each journey and see beautiful statistics of them with timely stats, map displays and total distance travelled.
+			</h3>
+		</div>		
+		</div>
+		<div class="questions-columns row">
+			<button class="btn btn-lg btn-success"><a style="color: #FFFFFF" href="#about">Explore</a></button>
+		</div>
+	</section>
+	
+	
+	<!-- about -->
+	<section class="page-section-gray" id="about" class="container">
+		<div id="questions" class="questions-columns row">
+		<div class="subsection-title row">
+			<h2 class="title" style="padding-bottom: 5%">How to Use?</h2>
+		</div>
+			<div class="question-item">
+				<h4 class="inline-header">Enter your journey details</h4>
+				<p>You can fill the details of the journeys you have travelled. You can also use pnr of your future journeys to fetch details automatically.</p>
+			</div>
+			<div class="question-item">
+				<h4 class="inline-header">Maintain your profile</h4>
+				<p>Keep a personal profile with map and statistics about your journeys. You can write detailed experience of your journey so that you can cherish your memorable moments.</p>
+			</div>
+			<div class="question-item">
+				<h4 class="inline-header">Share your journeys</h4>
+				<p>You can keep your data protected or share it with your friends. </p>
+			</div>
+			<div class="question-item">
+				<button class="btn btn-lg btn-success"><a style="color: #FFFFFF" href="/entry">Enter the Website</a></button>
+			</div>
+		</div>
+	</section>
+	
+	<!-- contact -->
+	<section id="contact">
+		<div class="subsection-title row" id="feedback">
+			<h3 class="title">Say Hello</h3>
+			<div id="contact-sent"><div></div><h3>Thank you! We'll be in touch!</h3></div>
+			<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { feedback = document.getElementById("contact");feedback.innerHTML = "Invalid Email-ID";}"></iframe>
+				<form action="https://docs.google.com/forms/d/1X-KbSlFmjh_9xFUHdiGTmh5Y35m6AsjCyQORU8htgdU/formResponse" method="POST" id="ss-form" target="_self" onsubmit=""><ol role="list" class="ss-question-list" style="padding-left: 0">
+					<input type="text" name="entry.690358858" value="" class="ss-q-short form-control" id="entry_690358858" dir="auto" aria-label="Username  " title="" placeholder="Username" required>
+
+					<input type="text" name="entry.2129960556" value="" class="ss-q-short form-control" id="entry_2129960556" dir="auto" aria-label="Email ID  " title="" placeholder="Email ID" required>
+					<div class="error-message"></div>
+
+					<textarea name="entry.694356638" rows="8" cols="0" class="ss-q-long form-control" id="entry_694356638" dir="auto" aria-label="Feedback  " placeholder="Feedback" required></textarea>
+					<div class="error-message"></div>
+
+					<input class="btn btn-lg btn-success" type="submit" name="submit" value="Submit" id="ss-submit">
+				</form>
+		</div>
+	</section>
+
+    <!-- footer -->
+	<footer>
+	    <div class="container row">
+	        <div class="col span-2">
+	            <h3>Contact</h3>
+	            <p>
+	            <a href="mailto:hello@mytravelogue.in">hello@mytravelogue.in</a>
+	            <br>
+	            +080 5678 1234
+	            </p>
+	            <p>
+	            <div><h3>Built in Bangalore</h3></div>
+	            </p>
+	        </div>
+	        <div class="col span-2">
+	            <h3>About Us</h3>
+	            <p>
+	                The core Travelogue team is
+	                <a href="" target="_blank">Suraj</a> and
+	                <a href="" target="_blank">Snehal</a>.
+	            </p>
+	        </div>
+	        <div class="col span-2">
+	            <h3>Social</h3>
+	            <p id="footer-elsewhere">
+	            <a href=""><i class="icon-square-twitter"></i></a>
+	            <a href=""><i class="icon-square-facebook"></i></a>
+	            <a href=""><i class="icon-square-googleplus"></i></a>
+	            </p>
+	            <h3>Legal</h3>
+	            <p>Copyright © 2015 Travelogue, All rights reserved.</p>
+	        </div>
+	    </div>
+	</footer>
+
+    <!-- analytics -->
+    <script type="text/javascript">
+     
+    </script>	    
+
+
+
+
+</body></html>

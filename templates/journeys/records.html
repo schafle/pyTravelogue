@@ -13,7 +13,16 @@
 	<link href="{% static "css/traveldataentry.css" %}" rel="stylesheet">
 	<script type="text/javascript" src="js/analytics.js"></script> 
 	<script type="text/javascript" src="js/modernizr.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<title>Responsive Vertical Timeline</title>
+	<script type="text/javascript">
+		$(document).ready(function(){$(".comment").shorten({
+		    "showChars" : 70,
+		    "moreText"  : "See More",
+		    "lessText"  : "Less",
+		});});	
+	</script>
+	<style>a{color:#0254eb}a:visited{color:#0254eb}a:hover{color:#0254eb}a.morelink{text-decoration:none;outline:none}.morecontent span{display:none}</style>
 	</head>
 <body>
 	<div class="site-wrapper">
@@ -29,11 +38,10 @@
 					<h3 class="masthead-brand">Hello NotLoggedInUser !</h3>
 				{% endif %}
               <ul class="nav masthead-nav">
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="/entry/add_entry/">Add a Journey</a></li>
-                <li class="active"><a href="/journeys/records/">Records</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/entry/">Add a Journey</a></li>
+                <li class="active"><a href="#">Records</a></li>
                 <li><a href="/journeys/">Statistics</a></li>
-                <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
 				{% if user.is_authenticated %}
 					 <li><a href="/entry/">Logout</a></li>
 				{% else %}
@@ -57,7 +65,7 @@
 							Source Station = {{ e.from_station }} </br>
 							Destination = {{ e.to_station }} </br>
 							Distance Travelled = {{ e.distance_covered }} KM </br>
-							</br>{{ e.comments}}</br>
+							<div class="comment">{{ e.comments}}</div>
 							
 						</h4>
 						<!--<a href="#0" class="cd-read-more">Read more</a>-->
@@ -82,5 +90,48 @@ var map = new google.maps.Map(document.getElementById("map-canvas"), {
   	mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
+</script>
+<script>
+	(function($) {
+	$.fn.shorten = function (settings) {
+		var config = {
+			showChars: 100,
+			ellipsesText: "...",
+			moreText: "more",
+			lessText: "less"
+		};
+		if (settings) {
+			$.extend(config, settings);
+		}
+		$(document).off("click", '.morelink');
+		$(document).on({click: function () {
+				var $this = $(this);
+				if ($this.hasClass('less')) {
+					$this.removeClass('less');
+					$this.html(config.moreText);
+				} else {
+					$this.addClass('less');
+					$this.html(config.lessText);
+				}
+				$this.parent().prev().toggle();
+				$this.prev().toggle();
+				return false;
+			}
+		}, '.morelink');
+		return this.each(function () {
+			var $this = $(this);
+			if($this.hasClass("shortened")) return;
+			$this.addClass("shortened");
+			var content = $this.html();
+			if (content.length > config.showChars) {
+				var c = content.substr(0, config.showChars);
+				var h = content.substr(config.showChars, content.length - config.showChars);
+				var html = c + '<span class="moreellipses">' + config.ellipsesText + ' </span><span class="morecontent"><span>' + h + '</span> <a href="#" class="morelink">' + config.moreText + '</a></span>';
+				$this.html(html);
+				$(".morecontent span").hide();
+			}
+		});
+	};
+ })(jQuery);
 </script>
 </body></html>
