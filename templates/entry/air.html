@@ -70,32 +70,26 @@ h1.hidden {
 			</form>
 			</div>
 			<div class="row">
-			<form class="form-signin" id="entry_form" method="post" action="/entry/add_entry/">
-				{% csrf_token %}
-				<!-- <div style="color:red; text-align:left; padding-left:10%;"><h5>${requestScope['Invalid PNR']}</h5></div> -->
-
-				<div id="inner-left" class="col-lg-6">
+				<form class="form-signin" id="entry_form" method="post" action="/entry/air/">
+			 		{% csrf_token %}
+            		<div id="inner-left" class="col-lg-6">
 				<p class="lead">
-					<input style="margin-bottom: 20px;" id="id_train_name" type="text" maxlength="128" name="train_name" class="form-control" placeholder="Train Name" required value="" list="cats">
+					<input style="margin-bottom: 20px;" id="id_ServiceProvider" type="text" maxlength="128" name="ServiceProvider" class="form-control" placeholder="Service Provider" required value="" list="cats">
 					<div id="train_error" style="color:red"></div>
 					<datalist id="cats">
 					</datalist>
-					<input style="margin-bottom: 20px;" id="id_date_of_journey" name="date_of_journey" type="date" type="text" class="form-control" placeholder="Date Of Journey" required value="">
-					<input style="margin-bottom: 20px;" id="id_from_station" maxlength="4" name="from_station" type="text" list="source" class="form-control" placeholder="Source" required value="">
+					<input style="margin-bottom: 20px;" id="id_date_of_journey" name="date_of_journey" type="date" {{ value|date:"D d M Y" }} type="text" class="form-control" placeholder="Date Of Journey" required value="">
+					<input style="margin-bottom: 20px;" id="id_from_airport" maxlength="4" name="from_airport" type="text" list="source" class="form-control" placeholder="Source" required value="">
 					<datalist id="source">
 					</datalist>
-					<input style="margin-bottom: 20px;" id="id_to_station" maxlength="4" name="to_station" type="text" list="destinations" class="form-control" placeholder="Destination" required value="">
+					<input style="margin-bottom: 20px;" id="id_to_airport" maxlength="4" name="to_airport" type="text" list="destinations" class="form-control" placeholder="Destination" required value="">
 					<datalist id="destinations">
 					</datalist>
 					<div id="id_class_selection">
 						<ul id="class-input-list">
 							<li>Class:</li>
-							<li><label for="id_class_selection_0"><input id="id_class_selection_0" name="class_selection" type="radio" value="1-AC" /> 1-AC</label></li>
-							<li><label for="id_class_selection_1"><input id="id_class_selection_1" name="class_selection" type="radio" value="2-AC" /> 2-AC</label></li>
-							<li><label for="id_class_selection_2"><input id="id_class_selection_2" name="class_selection" type="radio" value="3-AC" /> 3-AC</label></li>
-							<li><label for="id_class_selection_3"><input id="id_class_selection_3" name="class_selection" type="radio" value="SL" /> SL</label></li>
-							<li><label for="id_class_selection_4"><input id="id_class_selection_4" name="class_selection" type="radio" value="CC" /> CC</label></li>
-							<li><label for="id_class_selection_5"><input id="id_class_selection_5" name="class_selection" type="radio" value="Others" /> Others</label></li>
+							<li><label for="id_class_selection_0"><input id="id_class_selection_0" name="class_selection" type="radio" value="Economy" /> Economy</label></li>
+							<li><label for="id_class_selection_1"><input id="id_class_selection_1" name="class_selection" type="radio" value="Business" /> Business</label></li>
 						</ul>
 					</div>
 				</p>
@@ -105,13 +99,9 @@ h1.hidden {
 					<div id="berth-input">
 						<ul id="berth-input-list">
 							<li>Berth:</li>
-							<li><label for="id_berth_selection_0"><input id="id_berth_selection_0" name="berth_selection" type="radio" value="L" /> L</label></li>
-							<li><label for="id_berth_selection_1"><input id="id_berth_selection_1" name="berth_selection" type="radio" value="M" /> M</label></li>
-							<li><label for="id_berth_selection_2"><input id="id_berth_selection_2" name="berth_selection" type="radio" value="U" /> U</label></li>
-							<li><label for="id_berth_selection_3"><input id="id_berth_selection_3" name="berth_selection" type="radio" value="SL" /> SL</label></li>
-							<li><label for="id_berth_selection_4"><input id="id_berth_selection_4" name="berth_selection" type="radio" value="SM" /> SM</label></li>
-							<li><label for="id_berth_selection_5"><input id="id_berth_selection_5" name="berth_selection" type="radio" value="SU" /> SU</label></li>
-							<li><label for="id_berth_selection_6"><input id="id_berth_selection_6" name="berth_selection" type="radio" value="Others" /> Others</label></li>
+							<li><label for="id_berth_selection_0"><input id="id_berth_selection_0" name="berth_selection" type="radio" value="Window" /> Window</label></li>
+							<li><label for="id_berth_selection_1"><input id="id_berth_selection_1" name="berth_selection" type="radio" value="Aisle" /> Aisle</label></li>
+							<li><label for="id_berth_selection_2"><input id="id_berth_selection_2" name="berth_selection" type="radio" value="Middle" /> Middle</label></li>
 						</ul>
 					</div>
 				<p class="lead">
@@ -125,9 +115,8 @@ h1.hidden {
 					</div>
 				</p>
 				</div>
-				<input class="hidden" id="id_distance_covered" name="distance_covered" type="text" value="0" />
-				<input class="hidden" id="id_username" maxlength="30" name="username" type="text" value="{{name}}" />
-			</form>
+				<input class="hidden" id="id_username" maxlength="30" name="username" type="text" value="{{name}}" />            	
+        		</form>
 			</div>
           </div>
         </div>

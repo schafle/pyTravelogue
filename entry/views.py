@@ -2,8 +2,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from entry.forms import EntryForm
-from entry.models import Entries
+from entry.forms import EntryForm, AirEntryForm
+from entry.models import Entries, AirEntries
 from journeys.models import Train
 from django.db.models import Q
 from django.db import connection
@@ -11,7 +11,7 @@ from django.db import connection
 import collections
 import re
 
-def index(request):
+def train(request):
 	# Get the context from the request.
 	context = RequestContext(request)
 	# A HTTP POST?
@@ -24,17 +24,44 @@ def index(request):
 			form.save(commit=True)
 			# Now call the index() view.
 			# The user will be shown the homepage.
-			return index(request)
+			return HttpResponseRedirect('/journeys/')
 		else:
 			# The supplied form contained errors - just print them to the terminal.
-			print form.errors
+			print form.errors	
 	else:
 		# If the request was not a POST, display the form to enter details.
 		form = EntryForm()
 
 	# Bad form (or form details), no form supplied...
 	# Render the form with error messages (if any).
-	return render_to_response('entry/index.html', {'form': form, 'name' : request.user.username}, context)
+	return render_to_response('entry/train.html', {'form': form, 'name' : request.user.username}, context)
+
+def air(request):
+	# Get the context from the request.
+    context = RequestContext(request)
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = AirEntryForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+            form.save(commit=True)
+
+            # Now call the index() view.
+            # The user will be shown the homepage.
+            return HttpResponseRedirect('/journeys/air_travel/')
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = AirEntryForm()
+
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+	return render_to_response('entry/air.html', {'form': form, 'name' : request.user.username}, context)
 
 def get_train_list(max_results=0, starts_with=''):
 	train_list = []
