@@ -11,6 +11,7 @@ import re
 from journeys.models import Train, Airport
 from math import radians, cos, sin, asin, sqrt
 from django.db import models
+import collections
 
 def index(request):
 	# Request the context of the request.
@@ -209,30 +210,76 @@ def records(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
 	context = RequestContext(request)
-	journey_list=Entries.objects.values('train_name','from_station','to_station','distance_covered','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
-	context_dict = {'entries': journey_list, 'name' : request.user.username}
+	journey_list=Entries.objects.values('id', 'train_name','from_station','to_station','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
+	journey_list_air=AirEntries.objects.values('id', 'ServiceProvider','from_airport','to_airport','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
+	context_dict = {'entries': journey_list, 'air_entries':journey_list_air, 'name' : request.user.username}
 	return render_to_response('journeys/records.html', context_dict, context)
 
+def air_details(request, journey_id):
+	# Request the context of the request.
+    # The context contains information such as the client's machine details, for example.
+	context = RequestContext(request)
+	journey_list=Entries.objects.values('id', 'train_name','from_station','to_station','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
+	journey_list_air=AirEntries.objects.values('id', 'ServiceProvider','from_airport','to_airport','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
+	context_dict = {'entries': journey_list, 'air_entries':journey_list_air, 'name' : str(journey_id)}
+	return render_to_response('journeys/air_details.html', context_dict, context)
+	
+
+def train_details(request, journey_id):
+	# Request the context of the request.
+    # The context contains information such as the client's machine details, for example.
+	context = RequestContext(request)
+	journey_list=Entries.objects.values('id', 'train_name','from_station','to_station','comments','date_of_journey').filter(username=request.user.username, id=journey_id).order_by('-date_of_journey')
+	route = get_train_route(journey_list[0]['train_name'], journey_list[0]['from_station'], journey_list[0]['to_station'])
+	distance_covered = train_distance_covered(journey_list[0]['train_name'], journey_list[0]['from_station'], journey_list[0]['to_station'])
+	context_dict = {'entries': journey_list[0], 
+					'route':route, 
+					'comments':journey_list[0]['comments'],
+					'distance_covered':distance_covered,
+					'name' : request.user.username}
+	return render_to_response('journeys/train_details.html', context_dict, context)
+
+def get_train_route(train, _from, _to):
+	try:
+		train_route = Train.objects.values('train_route').filter(train_name=train)
+		if len(train_route) > 1:
+			print(" There are more than one trains with this train name. Something wrong with database")
+			return 0
+	except Exception, e:
+		print("Exception Thrown"+str(e))
+		return 0
+	try:
+		route_list = train_route[0]['train_route'].split(":")
+		route_list = route_list[0::2]
+		route_list = route_list[route_list.index(_from):route_list.index(_to)+1]
+		route_dict = collections.OrderedDict()
+		for place in route_list:
+			route_dict[place] = Station.objects.values('station_lat', 'station_long').filter(station_code=place)
+	except Exception, e:
+		print("Something went wrong %s" % e)
+		return 0
+	return route_dict
+
+def train_distance_covered(train, from_station, to_station):
+	try:
+		train_route = Train.objects.values('train_route').filter(train_name=train)
+		if len(train_route) > 1:
+			print(" There are more than one trains with this train name. Something wrong with database")
+			return 0
+	except Exception, e:
+		print("Exception Thrown"+str(e))
+		return 0
+	try:
+		route_list = train_route[0]['train_route'].split(":")
+		route_dict = dict(zip(route_list[::2], route_list[1::2]))
+		distance_covered = 	int(route_dict[to_station]) - int(route_dict[from_station])
+	except Exception, e:
+		print("Something went wrong %s" % e)
+		return 0
+	return distance_covered
+	
 def _calculate_distance_covered(request):
 	'''Returns the total distance travelled '''
-	def distance_covered(train, from_station, to_station):
-		try:
-			train_route = Train.objects.values('train_route').filter(train_name=train)
-			if len(train_route) > 1:
-				print(" There are more than one trains with this train name. Something wrong with database")
-				return 0
-		except Exception, e:
-			print("Exception Thrown"+str(e))
-			return 0
-		try:
-			route_list = train_route[0]['train_route'].split(":")
-			route_dict = dict(zip(route_list[::2], route_list[1::2]))
-			distance_covered = 	int(route_dict[_to]) - int(route_dict[_from])
-		except Exception, e:
-			print("Something went wrong %s" % e)
-			return 0
-		return distance_covered
-	
 	journey_list=Entries.objects.values('train_name', 'from_station', 'to_station').filter(username=request.user.username)
 	total_distance_covered = 0
 	maximum_distance_covered = 0
@@ -240,7 +287,7 @@ def _calculate_distance_covered(request):
 		train = journey['train_name']
 		_from = journey['from_station']
 		_to = journey['to_station']
-		distance_covered_in_this_journey = distance_covered(train, _from, _to)
+		distance_covered_in_this_journey = train_distance_covered(train, _from, _to)
 		total_distance_covered += distance_covered_in_this_journey
 		if maximum_distance_covered < distance_covered_in_this_journey:
 			maximum_distance_covered = distance_covered_in_this_journey
@@ -253,32 +300,6 @@ def _calculate_air_distance_covered(request):
 	Calculate the great circle distance between two points 
 	on the earth (specified in decimal degrees)
 	"""
-	def calculate_point_to_point_distance(_from, _to):
-		try:
-			lat_long_list = Airport.objects.values('station_code', 'station_lat', 'station_long').filter(models.Q(station_code=_to) | models.Q(station_code=_from))
-			if len(lat_long_list) > 2:
-				print("Something went wrong. Database needs to be checked for data with same aiport code")
-				return 0
-			lon1 = lat_long_list[0]['station_long']
-			lat1 = lat_long_list[0]['station_lat']
-			lon2 = lat_long_list[1]['station_long']
-			lat2 = lat_long_list[1]['station_lat']
-			
-		except Exception, e:
-			print("Exception Thrown"+str(e)) 
-			return 0
-		
-		# convert decimal degrees to radians 
-		lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
-	
-		# haversine formula 
-		dlon = lon2 - lon1 
-		dlat = lat2 - lat1 
-		a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-		c = 2 * asin(sqrt(a)) 
-		r = 6371 # Radius of earth in kilometers. Use 3956 for miles
-		return c * r
-	
 	distance_covered = 0
 	longest_journey = 0
 	journey_list=AirEntries.objects.values('from_airport', 'to_airport').filter(username=request.user.username)
@@ -295,4 +316,28 @@ def _calculate_air_distance_covered(request):
 	average_distance_covered = distance_covered/len(journey_list)
 	return (int(distance_covered), int(longest_journey), int(average_distance_covered), len(journey_list))
 
+def calculate_point_to_point_distance(_from, _to):
+	try:
+		lat_long_list = Airport.objects.values('station_code', 'station_lat', 'station_long').filter(models.Q(station_code=_to) | models.Q(station_code=_from))
+		if len(lat_long_list) > 2:
+			print("Something went wrong. Database needs to be checked for data with same aiport code")
+			return 0
+		lon1 = lat_long_list[0]['station_long']
+		lat1 = lat_long_list[0]['station_lat']
+		lon2 = lat_long_list[1]['station_long']
+		lat2 = lat_long_list[1]['station_lat']
+		
+	except Exception, e:
+		print("Exception Thrown"+str(e)) 
+		return 0
+	
+	# convert decimal degrees to radians 
+	lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
+	# haversine formula 
+	dlon = lon2 - lon1 
+	dlat = lat2 - lat1 
+	a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+	c = 2 * asin(sqrt(a)) 
+	r = 6371 # Radius of earth in kilometers. Use 3956 for miles
+	return c * r

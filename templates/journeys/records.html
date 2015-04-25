@@ -66,10 +66,32 @@
 							Destination = {{ e.to_station }} </br>
 							Distance Travelled = {{ e.distance_covered }} KM </br>
 							<div class="comment">{{ e.comments}}</div>
+							<a href="/journeys/records/train/{{e.id}}">See more</a>
 							
 						</h4>
 						<!--<a href="#0" class="cd-read-more">Read more</a>-->
 						<span class="cd-date">{{ e.date_of_journey }}</span>
+					</div> <!-- cd-timeline-content -->
+				</div> <!-- cd-timeline-block -->
+				{% endfor %}
+				{% for j in air_entries %}
+				<div class="cd-timeline-block">
+					<div class="cd-timeline-img cd-movie">
+						<!-- <img src="img/cd-icon-picture.svg" alt=""> -->
+					</div> <!-- cd-timeline-img -->
+		
+					<div class="cd-timeline-content">
+						<h3>{{ j.ServiceProvider }}</h3>
+						<h4>	
+							Source Station = {{ j.from_airport }} </br>
+							Destination = {{ j.to_airport }} </br>
+							Distance Travelled = {{ j.distance_covered }} KM </br>
+							<div class="comment">{{ j.comments}}</div>
+							<a href="/journeys/records/air/{{j.id}}">See more</a>
+							
+						</h4>
+						<!--<a href="#0" class="cd-read-more">Read more</a>-->
+						<span class="cd-date">{{ j.date_of_journey }}</span>
 					</div> <!-- cd-timeline-content -->
 				</div> <!-- cd-timeline-block -->
 				{% endfor %}

@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="pragma"        content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-store" />
+
+<!-- Bootstrap core CSS -->
+{% load static %} <!-- New line -->
+<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+
+<!-- Custom styles for this template -->
+<link href="{% static "css/traveldataentry.css" %}" rel="stylesheet">
+
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script> 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script>
+<title>{{name}}</title>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=370684603080544&version=v2.3";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>    	  
+</head>
+<body style="text-align: center;">
+	<div id="fb-root"></div>
+	<div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+				{% if user.is_authenticated %}
+					<h3 class="masthead-brand">Hello {{name}} !</h3>
+				{% else %}
+					<h3 class="masthead-brand">Hello Guest !</h3>
+				{% endif %}
+              <ul class="nav masthead-nav">
+			  {% if user.is_authenticated %}
+			  	<li><a href="/">Home</a></li>
+                <li><a href="/entry/add_entry/">Add a Journey</a></li>
+                <li><a href="/journeys/records/">Records</a></li>
+                <li><a href="/journeys/">Statistics</a></li>
+				<li><a href="/entry/">Logout</a></li>
+			  {% else %}
+				<li><a href="/login/register/">Register Here</a></li>
+				<li><a href="/login/login/">Login</a></li>
+			  {% endif %}
+              </ul>
+            </div>
+          </div>
+  
+        <div class="inner cover">
+			<div class="row">
+				<div id="inner-left-8" class="col-lg-8">
+					<div class="panel panel-info">
+					<div class="panel-heading">
+					<h3>Bird's eye view of your travel</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div  id="map-canvas" style="width: 100%; height: 738px;"> </div>
+						</div>
+					</div>
+					</div>
+				</div>
+				
+				<div id="inner-right-4" class="col-lg-4">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Source Station</h3>
+						</div>
+						<h1><b style="color: #336699; font-size:80px;">{{entries.from_station}}</b></h1>
+					</div>
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Destination</h3>
+						</div>
+						<h1><b style="color: #336699; font-size:80px;">{{entries.to_station}}</b></h1>
+					</div>
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Distance covered</h3>
+						</div>
+						<h1><b style="color: #336699; font-size:80px;">{{distance_covered}} km</b></h1>
+					</div>
+					<div>
+						<INPUT TYPE="SUBMIT" VALUE="Submit" class="btn btn-lg btn-success">
+						<INPUT TYPE="RESET" VALUE="Reset" class="btn btn-lg btn-success">
+					</div>
+				</div>
+            </div>
+            <div class="row">
+				<div id="inner-left-12" class="col-lg-12">
+					<div class="panel panel-info">
+					<div class="panel-heading">
+					<h3>Memorable moments in the journey</h3>
+					</div>
+					<div class="panel-body" style="max-width: 1024px;">
+						<div class="row">
+							<h4 style="text-align: left; margin-left: 10%; word-wrap: break-word;">{{comments}}</h4>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="mastfoot">
+            <div class="inner">
+              <p></p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    </div>
+
+<script>
+        //Defining map as a global variable to access from other functions
+        var map;
+        var polyline;        
+        var lineCoordinates = [{% for sid, iid in route.items %} 
+    			{% for iid in iid %}
+    				[{{iid.station_lat}},
+    				{{iid.station_long}}],
+    			{% endfor %}			
+		{% endfor %}];
+
+        function addAnimatedPolyline () {
+            //First we iterate over the coordinates array to create a
+            // new array which includes objects of LatLng class.
+            var pointCount = lineCoordinates.length;
+            var linePath = [];
+            for (var i=0; i < pointCount; i++) {
+                var tempLatLng = new google.maps.LatLng(lineCoordinates[i][0], lineCoordinates[i][1]);
+                linePath.push(tempLatLng);
+            }
+
+            // Defining arrow symbol
+            var arrowSymbol = {
+                strokeColor: '#070',
+                scale: 3,
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+            };
+
+
+            // Polyline properties are defined below
+            var lineOptions = {
+                path: linePath,
+                icons: [{
+                    icon: arrowSymbol
+                    //offset: '100%'
+                }],
+                strokeWeight: 3,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8
+            }
+            polyline = new google.maps.Polyline(lineOptions);
+
+            // Polyline is set to current map
+            polyline.setMap(map);
+
+            // Calling the arrow animation function
+            animateArrow();
+        }
+
+        function animateArrow() {
+            var counter = 0;
+            var accessVar = window.setInterval(function() {
+                counter = (counter + 1) % 350;
+
+                var arrows = polyline.get('icons');
+                arrows[0].offset = (counter / 2) + '%';
+                polyline.set('icons', arrows);
+            }, 50);
+        }
+
+        function initMap() {
+            //Enabling new cartography and themes
+            google.maps.visualRefresh = true;
+
+            //Setting starting options of map
+            var mapOptions = {
+                scrollwheel:false,
+  				center: new google.maps.LatLng(22.830852, 80.278573),
+                zoom: 5,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            //Getting map DOM element
+            var mapElement = document.getElementById('map-canvas');
+
+            //Creating a map with DOM element which is just obtained
+            map = new google.maps.Map(mapElement, mapOptions);
+
+            addAnimatedPolyline();
+        }
+
+        google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+
+</script>
+</body>
+</html>
