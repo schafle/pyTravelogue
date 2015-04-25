@@ -41,7 +41,8 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/entry/">Add a Journey</a></li>
                 <li class="active"><a href="#">Records</a></li>
-                <li><a href="/journeys/">Statistics</a></li>
+                <li><a href="/journeys/">Train Statistics</a></li>
+                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
 				{% if user.is_authenticated %}
 					 <li><a href="/entry/">Logout</a></li>
 				{% else %}
@@ -86,7 +87,7 @@
 							Source Station = {{ j.from_airport }} </br>
 							Destination = {{ j.to_airport }} </br>
 							Distance Travelled = {{ j.distance_covered }} KM </br>
-							<div class="comment">{{ j.comments}}</div>
+							<div class="comment" style="max-width:200px; word-wrap: break-word;">{{ j.comments}}</div>
 							<a href="/journeys/records/air/{{j.id}}">See more</a>
 							
 						</h4>
