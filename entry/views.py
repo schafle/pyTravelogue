@@ -36,6 +36,14 @@ def train(request):
 	# Render the form with error messages (if any).
 	return render_to_response('entry/train.html', {'form': form, 'name' : request.user.username}, context)
 
+def add_entry(request):
+	# Get the context from the request.
+	context = RequestContext(request)
+	# Bad form (or form details), no form supplied...
+	# Render the form with error messages (if any).
+	return render_to_response('entry/add_entry.html', {'name' : request.user.username}, context)
+
+
 def air(request):
 	# Get the context from the request.
     context = RequestContext(request)
