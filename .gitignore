@@ -2,6 +2,6 @@
 *.db
 *.exe
 *.log
-ToDo.txt
+ToDo.*
 SoftwaresRequired/
-toDo.docx
+*.docx

@@ -10,17 +10,6 @@
 
 <!-- Custom styles for this template -->
 <link href="{% static "css/dataentry_form.css" %}" rel="stylesheet">
-
-<link href="{% static "css/jqueryCalendar.css" %}" rel="stylesheet">
-
-<!-- For Ajax requests -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<!-- <script src="{% static "js/jquery.js" %}"></script> -->
-<script src="{% static "js/rango-ajax.js"%}"></script>
-
-<script src="{% static "js/jquery-1.6.2.min.js"%}"></script>
-<script src="{% static "js/jquery-ui-1.8.15.custom.min.js"%}"></script>
-
 <style>
 h1.hidden {
     display: none;
@@ -45,8 +34,8 @@ h1.hidden {
                 <li><a href="/">Home</a></li>
                 <li class="active"><a href="#">Add a Journey</a></li>
                 <li><a href="/journeys/records">Records</a></li>
-                <li><a href="/journeys/">Statistics</a></li>
-                <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
+                <li><a href="/journeys/">Train Statistics</a></li>
+                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
                 {% if user.is_authenticated %}
 					 <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
 				{% else %}
@@ -74,10 +63,14 @@ h1.hidden {
 			 		{% csrf_token %}
             		<div id="inner-left" class="col-lg-6">
 				<p class="lead">
-					<input style="margin-bottom: 20px;" id="id_ServiceProvider" type="text" maxlength="128" name="ServiceProvider" class="form-control" placeholder="Service Provider" required value="" list="cats">
-					<div id="train_error" style="color:red"></div>
-					<datalist id="cats">
-					</datalist>
+					<input style="margin-bottom: 20px;" for="id_berth_selection" type="text" maxlength="128" name="ServiceProvider" class="form-control" placeholder="Service Provider" required value="" list="cats">
+					<select id="id_ServiceProvider" name="ServiceProvider">
+						<option value="Indigo">Indigo</option>
+						<option value="Jet Airways">Jet Airways</option>
+						<option value="Air Asia">Air Asia</option>
+						<option value="Spice Jet">Spice Jet</option>
+						<option value="Other">Other</option>
+					</select>
 					<input style="margin-bottom: 20px;" id="id_date_of_journey" name="date_of_journey" type="date" {{ value|date:"D d M Y" }} type="text" class="form-control" placeholder="Date Of Journey" required value="">
 					<input style="margin-bottom: 20px;" id="id_from_airport" maxlength="4" name="from_airport" type="text" list="source" class="form-control" placeholder="Source" required value="">
 					<datalist id="source">

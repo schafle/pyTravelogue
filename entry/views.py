@@ -17,7 +17,6 @@ def train(request):
 	# A HTTP POST?
 	if request.method == 'POST':
 		form = EntryForm(request.POST)
-		print(form)
 		# Have we been provided with a valid form?
 		if form.is_valid():
 			# Save the new category to the database.

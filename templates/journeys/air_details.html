@@ -44,8 +44,9 @@
 			  {% if user.is_authenticated %}
 			  	<li><a href="/">Home</a></li>
                 <li><a href="/entry/add_entry/">Add a Journey</a></li>
-                <li><a href="/journeys/records/">Records</a></li>
-                <li><a href="/journeys/">Statistics</a></li>
+                <li class="active" ><a href="/journeys/records/">Records</a></li>
+                <li><a href="/journeys/">Train Statistics</a></li>
+                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
 				<li><a href="/entry/">Logout</a></li>
 			  {% else %}
 				<li><a href="/login/register/">Register Here</a></li>
@@ -73,35 +74,42 @@
 				<div id="inner-right-4" class="col-lg-4">
 					<div class="panel panel-info">
 						<div class="panel-heading">
-							<h3>Longest Journey till date</h3>
+							<h3>From Airport</h3>
 						</div>
-						<h1><b style="color: #336699; font-size:80px;">{{longest_journey}}</b></h1>
+						<h1><b style="color: #336699; font-size:80px;">{{entries.from_airport}}</b></h1>
 					</div>
 					<div class="panel panel-info">
 						<div class="panel-heading">
-							<h3>Total number of journeys</h3>
+							<h3>Destination</h3>
 						</div>
-						<h1><b style="color: #336699; font-size:80px;">{{total_number_of_journeys}}</b></h1>
+						<h1><b style="color: #336699; font-size:80px;">{{entries.to_airport}}</b></h1>
 					</div>
 					<div class="panel panel-info">
 						<div class="panel-heading">
-							<h3>Avergae length of journeys</h3>
+							<h3>Distance Travelled</h3>
 						</div>
-						<h1><b style="color: #336699; font-size:80px;">{{average_length_of_journeys}} km</b></h1>
+						<h1><b style="color: #336699; font-size:80px;">{{distance_covered}} km</b></h1>
 					</div>
-					<div class="panel panel-info">
-						<div class="panel-heading">
-							<h3>Travelogue Rank</h3>
-						</div>
-						<h1><b style="color: #336699; font-size:80px;">{{travelogue_rank_distance}}</b></h1>
+					<div>
+						<INPUT TYPE="SUBMIT" VALUE="Submit" class="btn btn-lg btn-success">
+						<INPUT TYPE="RESET" VALUE="Reset" class="btn btn-lg btn-success">
 					</div>
 				</div>
             </div>
-			<div class="mastfoot">
-            <div class="inner">
-              <p></p>
-            </div>
-          </div>
+			<div class="row">
+				<div id="inner-left-12" class="col-lg-12">
+					<div class="panel panel-info">
+					<div class="panel-heading">
+					<h3>Memorable moments in the journey</h3>
+					</div>
+					<div class="panel-body" style="max-width: 1024px;">
+						<div class="row">
+							<h4 style="text-align: left; margin-left: 10%; word-wrap: break-word;">{{comments}}</h4>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
 
         </div>
 
@@ -111,49 +119,84 @@
     </div>
 
 <script>
-// First, create an object containing LatLng and population for each city.
-var citymap = {};
-{% for e in lat_long_list_of_stations %}
-citymap['{{e.station_name}}'] = {
-  center: new google.maps.LatLng({{e.station_lat}}, {{e.station_long}}),
-  population: {{e.visits}}*100000
-};
-{%endfor%}
+        //Defining map as a global variable to access from other functions
+        var map;
+        var polyline;        
+        var lineCoordinates = [ 
+    			[{{route_from.station_lat}},{{route_from.station_long}}],
+    				[{{route_to.station_lat}},{{route_to.station_long}}]
+		];
 
-var cityCircle;
+        function addAnimatedPolyline () {
+            //First we iterate over the coordinates array to create a
+            // new array which includes objects of LatLng class.
+            var pointCount = lineCoordinates.length;
+            var linePath = [];
+            for (var i=0; i < pointCount; i++) {
+                var tempLatLng = new google.maps.LatLng(lineCoordinates[i][0], lineCoordinates[i][1]);
+                linePath.push(tempLatLng);
+            }
 
-function initialize() {
-  // Create the map.
-  var mapOptions = {
-    zoom: 5,
-  	scrollwheel:false,
-  	center: new google.maps.LatLng(22.830852, 80.278573),
-  	mapTypeId: google.maps.MapTypeId.HYBRID 
-  };
+            // Defining arrow symbol
+            var arrowSymbol = {
+                strokeColor: '#070',
+                scale: 3,
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+            };
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
 
-  // Construct the circle for each value in citymap.
-  // Note: We scale the area of the circle based on the population.
-  for (var city in citymap) {
-    var populationOptions = {
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#FF0000',
-      fillOpacity: 0.35,
-      map: map,
-      center: citymap[city].center,
-      radius: Math.sqrt(citymap[city].population) * 100
-    };
-    // Add the circle for this city to the map.
-    cityCircle = new google.maps.Circle(populationOptions);
-  }
-}
+            // Polyline properties are defined below
+            var lineOptions = {
+                path: linePath,
+                icons: [{
+                    icon: arrowSymbol
+                    //offset: '100%'
+                }],
+                strokeWeight: 3,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8
+            }
+            polyline = new google.maps.Polyline(lineOptions);
 
-google.maps.event.addDomListener(window, 'load', initialize);
+            // Polyline is set to current map
+            polyline.setMap(map);
 
+            // Calling the arrow animation function
+            animateArrow();
+        }
+
+        function animateArrow() {
+            var counter = 0;
+            var accessVar = window.setInterval(function() {
+                counter = (counter + 1) % 350;
+
+                var arrows = polyline.get('icons');
+                arrows[0].offset = (counter / 2) + '%';
+                polyline.set('icons', arrows);
+            }, 50);
+        }
+
+        function initMap() {
+            //Enabling new cartography and themes
+            google.maps.visualRefresh = true;
+
+            //Setting starting options of map
+            var mapOptions = {
+                scrollwheel:false,
+  				center: new google.maps.LatLng(22.830852, 80.278573),
+                zoom: 5,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            //Getting map DOM element
+            var mapElement = document.getElementById('map-canvas');
+
+            //Creating a map with DOM element which is just obtained
+            map = new google.maps.Map(mapElement, mapOptions);
+
+            addAnimatedPolyline();
+        }
+
+        google.maps.event.addDomListener(window, 'load', initMap);
 </script>
 </body>
 </html>

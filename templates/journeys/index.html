@@ -205,9 +205,10 @@
               <ul class="nav masthead-nav">
                 <li><a href="/user/{{name}}">Share</a></li>
                 <li><a href="/">Home</a></li>
-                <li><a href="/entry/">Add a Journey</a></li>
+                <li><a href="/entry/add_entry/">Add a Journey</a></li>
                 <li><a href="/journeys/records/">Records</a></li>
-                <li class="active"><a href="DisplayStatisticsController">Statistics</a></li>
+                <li class="active"><a href="/journeys/">Train Statistics</a></li>
+                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
                 <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
 				{% if user.is_authenticated %}
 					 <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>

@@ -189,8 +189,8 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/entry/">Add a Journey</a></li>
                 <li><a href="/journeys/records/">Records</a></li>
-                <li class="active"><a href="DisplayStatisticsController">Statistics</a></li>
-                <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
+                <li><a href="/journeys/">Train Statistics</a></li>
+                <li class="active" ><a href="/journeys/air_travel">Plane Statistics</a></li>
 				{% if user.is_authenticated %}
 					 <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
 				{% else %}
@@ -377,36 +377,49 @@
     </div>
 
 <script>
+// First, create an object containing LatLng and population for each city.
+var citymap = {};
+{% for e in lat_long_list_of_stations %}
+citymap['{{e.station_name}}'] = {
+  center: new google.maps.LatLng({{e.station_lat}}, {{e.station_long}}),
+  population: {{e.visits}}*100000
+};
+{%endfor%}
+
+var cityCircle;
+
 function initialize() {
   // Create the map.
   var mapOptions = {
-    zoom: 3,
+    zoom: 5,
   	scrollwheel:false,
-  	center: new google.maps.LatLng(0, -180),
-  	mapTypeId: google.maps.MapTypeId.TERRAIN 
+  	center: new google.maps.LatLng(22.830852, 80.278573),
+  	mapTypeId: google.maps.MapTypeId.HYBRID 
   };
 
   var map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
-  var locations_plot = [
-    [new google.maps.LatLng(37.772323, -122.214897),new google.maps.LatLng(-27.46758, 153.027892)],
-
-    
-  ];
-
-	for (var i = 0; i < locations_plot.length; i++) {
-    	var flightPath = new google.maps.Polyline({
-        path: locations_plot[i],
-        geodesic: true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
-      });
-    	  flightPath.setMap(map);
-   }
+  // Construct the circle for each value in citymap.
+  // Note: We scale the area of the circle based on the population.
+  for (var city in citymap) {
+    var populationOptions = {
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      map: map,
+      center: citymap[city].center,
+      radius: Math.sqrt(citymap[city].population) * 100
+    };
+    // Add the circle for this city to the map.
+    cityCircle = new google.maps.Circle(populationOptions);
+  }
 }
+
 google.maps.event.addDomListener(window, 'load', initialize);
+
 </script>
 </body>
 </html>

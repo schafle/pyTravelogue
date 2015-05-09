@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="js/analytics.js"></script> 
 	<script type="text/javascript" src="js/modernizr.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<title>Responsive Vertical Timeline</title>
+	<title>MyTravelogue: Records</title>
 	<script type="text/javascript">
 		$(document).ready(function(){$(".comment").shorten({
 		    "showChars" : 70,
@@ -39,9 +39,10 @@
 				{% endif %}
               <ul class="nav masthead-nav">
                 <li><a href="/">Home</a></li>
-                <li><a href="/entry/">Add a Journey</a></li>
-                <li class="active"><a href="#">Records</a></li>
-                <li><a href="/journeys/">Statistics</a></li>
+                <li><a href="/entry/add_entry">Add a Journey</a></li>
+                <li class="active"><a href="/journeys/records">Records</a></li>
+                <li><a href="/journeys/">Train Statistics</a></li>
+                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
 				{% if user.is_authenticated %}
 					 <li><a href="/entry/">Logout</a></li>
 				{% else %}

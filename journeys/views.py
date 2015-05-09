@@ -221,10 +221,17 @@ def air_details(request, journey_id):
 	context = RequestContext(request)
 	journey_list=AirEntries.objects.values('id', 'ServiceProvider','from_airport','to_airport','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
 	distance_covered = calculate_point_to_point_distance(journey_list[0]['from_airport'], journey_list[0]['to_airport'])
-	lat_long_list = Airport.objects.values('station_code', 'station_lat', 'station_long').filter(models.Q(station_code=journey_list[0]['to_airport']) | models.Q(station_code=journey_list[0]['from_airport']))
-	print str(lat_long_list)
+	lat_long_list = Airport.objects.values('station_code', 'station_lat', 'station_long').filter(models.Q(station_code=journey_list[0]['from_airport']) | models.Q(station_code=journey_list[0]['to_airport']))
+	if lat_long_list[0]['station_code']==[journey_list[0]['from_airport']]:
+		source = lat_long_list[0]
+		destination = lat_long_list[1]
+	else: 
+		source = lat_long_list[1]
+		destination = lat_long_list[0]
+		
 	context_dict = {'entries': journey_list[0], 
-					'route':lat_long_list,
+					'route_from':source,
+					'route_to':destination,
 					'comments':journey_list[0]['comments'],
 					'distance_covered': int(distance_covered),
 					'name' : request.user.username}
@@ -237,6 +244,7 @@ def train_details(request, journey_id):
 	context = RequestContext(request)
 	journey_list=Entries.objects.values('id', 'train_name','from_station','to_station','comments','date_of_journey').filter(username=request.user.username, id=journey_id).order_by('-date_of_journey')
 	route = get_train_route(journey_list[0]['train_name'], journey_list[0]['from_station'], journey_list[0]['to_station'])
+	print(str(route))
 	distance_covered = train_distance_covered(journey_list[0]['train_name'], journey_list[0]['from_station'], journey_list[0]['to_station'])
 	context_dict = {'entries': journey_list[0], 
 					'route':route, 
