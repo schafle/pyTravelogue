@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="js/analytics.js"></script> 
 	<script type="text/javascript" src="js/modernizr.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<title>MyTravelogue: Records</title>
+	<title>MyTravelogue: {{name}}'s Records</title>
 	<script type="text/javascript">
 		$(document).ready(function(){$(".comment").shorten({
 		    "showChars" : 70,
@@ -65,10 +65,9 @@
 						<h4>	
 							Source Station = {{ e.from_station }} </br>
 							Destination = {{ e.to_station }} </br>
-							Distance Travelled = {{ e.distance_covered }} KM </br>
+							<!-- Distance Travelled = {{ e.distance_covered }} KM </br> -->
 							<div class="comment">{{ e.comments}}</div>
-							<a href="/journeys/records/train/{{e.id}}">See more</a>
-							
+							<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/train/{{e.id}}">Details</a></button>						
 						</h4>
 						<!--<a href="#0" class="cd-read-more">Read more</a>-->
 						<span class="cd-date">{{ e.date_of_journey }}</span>
@@ -88,8 +87,7 @@
 							Destination = {{ j.to_airport }} </br>
 							Distance Travelled = {{ j.distance_covered }} KM </br>
 							<div class="comment">{{ j.comments}}</div>
-							<a href="/journeys/records/air/{{j.id}}">See more</a>
-							
+							<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/air/{{j.id}}">Details</a></button>							
 						</h4>
 						<!--<a href="#0" class="cd-read-more">Read more</a>-->
 						<span class="cd-date">{{ j.date_of_journey }}</span>

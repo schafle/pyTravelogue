@@ -13,9 +13,23 @@
 <!-- Custom styles for this template -->
 <link href="{% static "css/traveldataentry.css" %}" rel="stylesheet">
 
+<!-- Styles for d3 charts -->
+<link href="{% static "css/charts/nv.d3.css" %}" rel="stylesheet">
+
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+<script src="{% static "js/charts_js/nv.d3.js"%}"></script>
+<script src="{% static "js/charts_js/lib/stream_layers.js"%}"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script>
 <title>MyTravelogue: statistics for train, source station, destination, berths, yearly count, monthly count etc. </title>
+<style>
+        svg {
+            display: block;
+            float: left;
+            height: 350px;
+            width: 350px;
+        }
+    </style>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script>
       google.load("visualization", "1", {packages:["corechart"]});
@@ -28,107 +42,145 @@
       google.setOnLoadCallback(drawChart7);
       google.setOnLoadCallback(drawChart8);
       google.setOnLoadCallback(drawChart9);
-      
-      function drawChart1() {
-        
-    	 var data = google.visualization.arrayToDataTable([
-          ['Trains', 'Count'],
-			{% for e in entries %}['{{ e.train_name }}',{{ e.dcount }}],{% endfor %}
-		  ]);
-        
-        
-        var options = {
-          //title: 'My Train Preferences',
-		  legend: 'none'
-        };
+   
+   var height = 350;
+   var width = 350;
+   
+   function drawChart1() {
+      var testdata = [
+      {% for e in entries %}
+        {key: '{{ e.train_name }}', y: {{ e.dcount }}},
+        {% endfor %}
+    ];
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
-        chart.draw(data, options);
-      }
-	  
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart1")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
+    }
 	  function drawChart2() {
-        
-    	 var data = google.visualization.arrayToDataTable([
-          ['fromStations', 'Count'],
-			{% for e in from_stations %}['{{ e.from_station }}',{{ e.count_from_stations }}],{% endfor %}
-		  ]);
-        
-        
-        var options = {
-          //title: 'My Top Source stations',
-		  legend: 'none'
-        };
+		var testdata = [
+      {% for e in from_stations %}
+        {key: '{{ e.from_station }}', y: {{ e.count_from_stations }}},
+        {% endfor %}
+    ];
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
-        chart.draw(data, options);
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart2")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
       }
 	  
 	  function drawChart3() {
-        
-    	 var data = google.visualization.arrayToDataTable([
-          ['ToStations', 'Count'],
-			{% for e in to_stations %}['{{ e.to_station }}',{{ e.count_to_stations }}],{% endfor %}
-		  ]);
-        
-        
-        var options = {
-          //title: 'My Top Destinations',
-		  legend: 'none'
-        };
+		  var testdata = [
+      {% for e in to_stations %}
+        {key: '{{ e.to_station }}', y: {{ e.count_to_stations }}},
+        {% endfor %}
+    ];
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart3'));
-        chart.draw(data, options);
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart3")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
       }
 	  
 	  function drawChart4() {
-        
-    	 var data = google.visualization.arrayToDataTable([
-          ['Trains', 'Class'],
-			{% for e in class_selection %}['{{ e.class_selection }}',{{ e.count_class_selection }}],{% endfor %}
-		  ]);
-        
-        
-        var options = {
-          //title: 'My Class Preferences',
-		  legend: 'none'
-        };
+	var testdata = [
+      {% for e in class_selection %}
+        {key: '{{ e.class_selection }}', y: {{ e.count_class_selection }}},
+        {% endfor %}
+    ];
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart4'));
-        chart.draw(data, options);
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart4")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
       }
 	  
 	  function drawChart5() {
-        
-    	 var data = google.visualization.arrayToDataTable([
-          ['TrainType', 'Count'],
-			{% for e in train_types_dict %}['{{ e.train_type }}',{{ e.count }}],{% endfor %}
-		  ]);
-        
-        
-        var options = {
-          //title: 'My Train Preferences',
-		  legend: 'none'
-        };
+	var testdata = [
+     {% for e in train_types_dict %}
+        {key: '{{ e.train_type }}', y: {{ e.count }}},
+        {% endfor %}
+    ];
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart5'));
-        chart.draw(data, options);
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart5")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
       }
 	  
 	  function drawChart6() {
-        
-    	 var data = google.visualization.arrayToDataTable([
-          ['Berths', 'Count'],
-			{% for e in berths %}['{{ e.berth_selection }}',{{ e.count_berth }}],{% endfor %}
-		  ]);
-        
-        
-        var options = {
-          //title: 'My berth selections',
-		  legend: 'none'
-        };
+		var testdata = [
+     {% for e in berths %}
+        {key: '{{ e.berth_selection }}', y: {{ e.count_berth }}},
+        {% endfor %}
+    ];
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart6'));
-        chart.draw(data, options);
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart6")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
       }
 	  
 	  function drawChart7() {
@@ -292,7 +344,8 @@
 							<h3>Train Selections</h3>
 						</div>
 					<div class="panel-body">
-						<div id="piechart1" style="width: 100%; height: 500px;"></div>
+						<!-- <div id="piechart1" style="width: 100%; height: 500px;"></div>-->
+						<svg id="piechart1" class="mypiechart"></svg>
 					</div>
 					</div>
 				</div>
@@ -302,7 +355,7 @@
 							<h3>Top Source Stations</h3>
 						</div>
 						<div class="panel-body">
-							<div id="piechart2" style="width: 100%; height: 500px;"></div>
+							<svg id="piechart2" class="mypiechart"></svg>
 						</div>
 					</div>
 				</div>
@@ -312,7 +365,7 @@
 							<h3>Top Destinations</h3>
 						</div>
 						<div class="panel-body">
-							<div id="piechart3" style="width: 100%; height: 500px;"></div>
+							<svg id="piechart3" class="mypiechart"></svg>
 						</div>
 					</div>
 				</div>
@@ -325,7 +378,7 @@
 						<h3>Class Preferences</h3>
 					</div>
 					<div class="panel-body">
-					<div id="piechart4" style="width: 100%; height: 500px;"></div>
+					<svg id="piechart4" class="mypiechart"></svg>
 					</div>
 					</div>
 				</div>
@@ -335,7 +388,7 @@
 							<h3>Train Type Selections</h3>
 						</div>
 						<div class="panel-body">
-							<div id="piechart5" style="width: 100%; height: 500px;"></div>
+							<svg id="piechart5" class="mypiechart"></svg>
 						</div>
 					</div>
 				</div>
@@ -345,7 +398,7 @@
 							<h3>Berth Fortunes</h3>
 						</div>
 						<div class="panel-body">
-							<div id="piechart6" style="width: 100%; height: 500px;"></div>
+							<svg id="piechart6" class="mypiechart"></svg>
 						</div>
 					</div>
 				</div>

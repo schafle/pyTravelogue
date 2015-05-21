@@ -15,15 +15,7 @@
 
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script> 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script>
-<title>{{name}}</title>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=370684603080544&version=v2.3";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>    	  
+<title>MyTravelogue: {{name}}'s journey from {{entries.from_airport}} to {{entries.to_airport}}</title>  	  
 </head>
 <body style="text-align: center;">
 	<div id="fb-root"></div>
@@ -139,8 +131,8 @@
 
             // Defining arrow symbol
             var arrowSymbol = {
-                strokeColor: '#070',
-                scale: 3,
+                strokeColor: '#000',
+                scale: 2,
                 path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
             };
 
@@ -173,7 +165,7 @@
                 var arrows = polyline.get('icons');
                 arrows[0].offset = (counter / 2) + '%';
                 polyline.set('icons', arrows);
-            }, 50);
+            }, 100);
         }
 
         function initMap() {
