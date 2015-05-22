@@ -35,8 +35,46 @@ def index(request):
 		name_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct()
 		number_of_trains=Entries.objects.values('train_name').filter(username=request.user.username).distinct().count()
 		number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries where username='"+request.user.username+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
+		
+		journeys_by_months_dict_list=[
+									{'all_from':0, 'months':'January'},
+									{'all_from':0, 'months':'February'},
+									{'all_from':0, 'months':'March'},
+									{'all_from':0, 'months':'April'},
+									{'all_from':0, 'months':'May'},
+									{'all_from':0, 'months':'June'},
+									{'all_from':0, 'months':'July'},
+									{'all_from':0, 'months':'August'},
+									{'all_from':0, 'months':'September'},
+									{'all_from':0, 'months':'October'},
+									{'all_from':0, 'months':'November'},
+									{'all_from':0, 'months':'December'},
+									]
 		number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries where username='"+request.user.username+"' group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
+		for dict in number_of_journeys_in_a_month:
+			index=0
+			for dict_jnw in journeys_by_months_dict_list:
+				if dict['months'] == dict_jnw['months']:
+					dict_jnw['all_from'] = dict['all_from']
+				index+=1
+		
+		journeys_by_weekdays_dict_list=[
+									{'all_from':0, 'days':'Sunday'},
+									{'all_from':0, 'days':'Monday'}, 
+									{'all_from':0, 'days':'Tuesday'}, 
+									{'all_from':0, 'days':'Wednesday'}, 
+									{'all_from':0, 'days':'Thursday'}, 
+									{'all_from':0, 'days':'Friday'}, 
+									{'all_from':0, 'days':'Saturday'}
+								]
 		number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries where username='"+request.user.username+"' group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
+		for dict in number_of_journeys_in_a_weekday:
+			index=0
+			for dict_jnw in journeys_by_weekdays_dict_list:
+				if dict['days'] == dict_jnw['days']:
+					dict_jnw['all_from'] = dict['all_from']
+				index+=1
+				
 		total_number_of_journeys=Entries.objects.filter(username=request.user.username).count()
 		travelogue_rank_distance=1
 		total_distance_travelled, longest_journey,average_length_of_journeys = _calculate_distance_covered(request)
@@ -51,8 +89,8 @@ def index(request):
 		'number_of_trains':number_of_trains,
 		'total_distance_travelled':total_distance_travelled, 
 		'number_of_journeys_in_a_year':number_of_journeys_in_a_year,
-		'number_of_journeys_in_a_month':number_of_journeys_in_a_month,
-		'number_of_journeys_in_a_weekday':number_of_journeys_in_a_weekday,
+		'number_of_journeys_in_a_month':journeys_by_months_dict_list,
+		'number_of_journeys_in_a_weekday':journeys_by_weekdays_dict_list,
 		'longest_journey':longest_journey,
 		'total_number_of_journeys':total_number_of_journeys,
 		'average_length_of_journeys':average_length_of_journeys,
