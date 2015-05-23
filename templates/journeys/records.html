@@ -55,6 +55,8 @@
           	<div class="inner cover">
 			<section id="cd-timeline" class="cd-container">
 				{% for e in entries %}
+				
+				{% if e.train_name %}
 				<div class="cd-timeline-block">
 					<div class="cd-timeline-img cd-picture">
 						<!-- <img src="img/cd-icon-picture.svg" alt=""> -->
@@ -73,26 +75,26 @@
 						<span class="cd-date">{{ e.date_of_journey }}</span>
 					</div> <!-- cd-timeline-content -->
 				</div> <!-- cd-timeline-block -->
-				{% endfor %}
-				{% for j in air_entries %}
+				{% else %}
 				<div class="cd-timeline-block">
 					<div class="cd-timeline-img cd-movie">
 						<!-- <img src="img/cd-icon-picture.svg" alt=""> -->
 					</div> <!-- cd-timeline-img -->
 		
 					<div class="cd-timeline-content">
-						<h3>{{ j.ServiceProvider }}</h3>
+						<h3>{{ e.ServiceProvider }}</h3>
 						<h4>	
-							Source Station = {{ j.from_airport }} </br>
-							Destination = {{ j.to_airport }} </br>
-							Distance Travelled = {{ j.distance_covered }} KM </br>
-							<div class="comment">{{ j.comments}}</div>
-							<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/air/{{j.id}}">Details</a></button>							
+							Source Station = {{ e.from_airport }} </br>
+							Destination = {{ e.to_airport }} </br>
+							Distance Travelled = {{ e.distance_covered }} KM </br>
+							<div class="comment">{{ e.comments}}</div>
+							<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/air/{{e.id}}">Details</a></button>							
 						</h4>
 						<!--<a href="#0" class="cd-read-more">Read more</a>-->
-						<span class="cd-date">{{ j.date_of_journey }}</span>
+						<span class="cd-date">{{ e.date_of_journey }}</span>
 					</div> <!-- cd-timeline-content -->
 				</div> <!-- cd-timeline-block -->
+				{% endif %}
 				{% endfor %}
 			</section> <!-- cd-timeline -->
 			</div>

@@ -7,11 +7,13 @@ from entry.models import Entries, AirEntries
 from django.db.models import Count, Sum, Max, Avg
 from django.db import connection
 from itertools import *
+from operator import itemgetter
 import re
 from journeys.models import Train, Airport
 from math import radians, cos, sin, asin, sqrt
 from django.db import models
 import collections
+
 
 def index(request):
 	# Request the context of the request.
@@ -34,8 +36,27 @@ def index(request):
 		number_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct().count()
 		name_of_places=Entries.objects.values('to_station').filter(username=request.user.username).distinct()
 		number_of_trains=Entries.objects.values('train_name').filter(username=request.user.username).distinct().count()
-		number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries where username='"+request.user.username+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 		
+		journeys_by_year_dict_list = []
+		number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries where username='"+request.user.username+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
+		years=[]
+		for dict in number_of_journeys_in_a_year:
+			years.append(int(dict['year']))
+		
+		years.insert(0, (min(years)-1)) #making year before first journey year 0
+		years.append(max(years)+1) #making year after last journey year 0
+		
+		for year in range((min(years)-1), max(years)+1):
+			journeys_by_year_dict_list.append({'all_from':0, 'year':year})
+		
+		for dict in number_of_journeys_in_a_year:
+			index=0
+			for dict_jnw in journeys_by_year_dict_list:
+				if dict['year'] == dict_jnw['year']:
+					dict_jnw['all_from'] = dict['all_from']
+				index+=1
+				
+		print str(journeys_by_year_dict_list)
 		journeys_by_months_dict_list=[
 									{'all_from':0, 'months':'January'},
 									{'all_from':0, 'months':'February'},
@@ -250,7 +271,8 @@ def records(request):
 	context = RequestContext(request)
 	journey_list=Entries.objects.values('id', 'train_name','from_station','to_station','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
 	journey_list_air=AirEntries.objects.values('id', 'ServiceProvider','from_airport','to_airport','comments','date_of_journey').filter(username=request.user.username).order_by('-date_of_journey')
-	context_dict = {'entries': journey_list, 'air_entries':journey_list_air, 'name' : request.user.username}
+	result_list = sorted(chain(journey_list, journey_list_air), key=itemgetter('date_of_journey'), reverse=True)
+	context_dict = {'entries': result_list,'name' : request.user.username}
 	return render_to_response('journeys/records.html', context_dict, context)
 
 def air_details(request, journey_id):
