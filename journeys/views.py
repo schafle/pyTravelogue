@@ -56,7 +56,6 @@ def index(request):
 					dict_jnw['all_from'] = dict['all_from']
 				index+=1
 				
-		print str(journeys_by_year_dict_list)
 		journeys_by_months_dict_list=[
 									{'all_from':0, 'months':'January'},
 									{'all_from':0, 'months':'February'},
