@@ -59,39 +59,35 @@
 				{% if e.train_name %}
 				<div class="cd-timeline-block">
 					<div class="cd-timeline-img cd-picture">
-						<!-- <img src="img/cd-icon-picture.svg" alt=""> -->
+						<img src="{% static "img/icons/train.png" %}" alt="">
 					</div> <!-- cd-timeline-img -->
 		
 					<div class="cd-timeline-content">
-						<h3>{{ e.train_name }}</h3>
+						<h3>Trip from {{ e.from_station }} to {{ e.to_station }}</h3>
 						<h4>	
-							Source Station = {{ e.from_station }} </br>
-							Destination = {{ e.to_station }} </br>
+							{{ e.date_of_journey }}
 							<!-- Distance Travelled = {{ e.distance_covered }} KM </br> -->
-							<div class="comment">{{ e.comments}}</div>
-							<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/train/{{e.id}}">Details</a></button>						
+							</br>
 						</h4>
+						<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/train/{{e.id}}">Details</a></button>
 						<!--<a href="#0" class="cd-read-more">Read more</a>-->
-						<span class="cd-date">{{ e.date_of_journey }}</span>
+						<span class="cd-date"></span>
 					</div> <!-- cd-timeline-content -->
 				</div> <!-- cd-timeline-block -->
 				{% else %}
 				<div class="cd-timeline-block">
 					<div class="cd-timeline-img cd-movie">
-						<!-- <img src="img/cd-icon-picture.svg" alt=""> -->
+						<img src="{% static "img/icons/plane.png" %}" alt="">
 					</div> <!-- cd-timeline-img -->
 		
 					<div class="cd-timeline-content">
-						<h3>{{ e.ServiceProvider }}</h3>
+						<h3>Trip from {{ e.from_airport }} to {{ e.to_airport }}</h3>
 						<h4>	
-							Source Station = {{ e.from_airport }} </br>
-							Destination = {{ e.to_airport }} </br>
-							Distance Travelled = {{ e.distance_covered }} KM </br>
-							<div class="comment">{{ e.comments}}</div>
-							<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/air/{{e.id}}">Details</a></button>							
+							{{ e.date_of_journey }}
 						</h4>
+						<button type="button" class="btn btn-sm btn-primary"><a style="text-decoration: none; color: #FFFFFF;" href="/journeys/records/air/{{e.id}}">Details</a></button>
 						<!--<a href="#0" class="cd-read-more">Read more</a>-->
-						<span class="cd-date">{{ e.date_of_journey }}</span>
+						<span class="cd-date"></span>
 					</div> <!-- cd-timeline-content -->
 				</div> <!-- cd-timeline-block -->
 				{% endif %}
