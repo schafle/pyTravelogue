@@ -8,7 +8,7 @@ BERTH_CHOICES = (('L','Lower'),('M','Middle'),('U','Upper'),('SL','SideLower'),(
 COACH_CHOICES = (('1-AC','1-AC'),('2-AC','2-AC'),('3-AC','3-AC'),('SL','Sleeper'),('CC','CarChair'),('Others','Others'))
 							
 class EntryForm(forms.ModelForm):
-	train_name = forms.CharField(max_length=128, help_text="Train name.")
+	train_name = forms.CharField(max_length=32, help_text="Train name.")
 	date_of_journey = forms.DateField(help_text="DOJ")
 	from_station = forms.CharField(max_length=4, help_text="From")
 	to_station = forms.CharField(max_length=4, help_text="To")

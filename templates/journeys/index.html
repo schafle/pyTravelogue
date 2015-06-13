@@ -21,7 +21,7 @@
 <script src="{% static "js/charts_js/nv.d3.js"%}"></script>
 <script src="{% static "js/charts_js/lib/stream_layers.js"%}"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script>
-<title>MyTravelogue: statistics for train, source station, destination, berths, yearly count, monthly count etc. </title>
+<title>Travelogue | statistics for train and plane journeys</title>
 <style>
     </style>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -36,6 +36,11 @@
       google.setOnLoadCallback(drawChart7);
       google.setOnLoadCallback(drawChart8);
       google.setOnLoadCallback(drawChart9);
+      google.setOnLoadCallback(drawChart10);
+      google.setOnLoadCallback(drawChart11);
+      google.setOnLoadCallback(drawChart12);
+      google.setOnLoadCallback(drawChart13);
+      google.setOnLoadCallback(drawChart14);
    
    function drawChart1() {
    var height = 350;
@@ -188,28 +193,182 @@
       }
 	  
 	  function drawChart7() {
-		  var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Year');
-      data.addColumn('number', 'NumberOfJourneys');
+	  	var height = 350;
+   		var width = 350;
+		var testdata = [
+     {% for e in serviceProviders %}
+        {key: '{{ e.ServiceProvider }}', y: {{ e.dcount }}},
+        {% endfor %}
+    ];
 
-      data.addRows([
-			{% for e in number_of_journeys_in_a_year %}['{{ e.year }}',{{ e.all_from }}],{% endfor %}
-      ]);
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
 
-      var options = {
-		legend: 'none',
-        hAxis: {
-          title: 'Time'
-        },
-        vAxis: {
-          title: 'NumberOfJourneys'
-        }
-      };
-      var chart = new google.visualization.LineChart(document.getElementById('bargraph1'));
-	  chart.draw(data, options);
+        d3.select("#piechart7")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
+      }
+      
+      function drawChart8() {
+	  	var height = 350;
+   		var width = 350;
+		var testdata = [
+     {% for e in from_airport_list %}
+        {key: '{{ e.from_airport }}', y: {{ e.count_from_stations }}},
+        {% endfor %}
+    ];
+
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart8")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
+      }
+      
+      function drawChart9() {
+	  	var height = 350;
+   		var width = 350;
+		var testdata = [
+     {% for e in to_airport_list %}
+        {key: '{{ e.to_airport }}', y: {{ e.count_to_stations }}},
+        {% endfor %}
+    ];
+
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart9")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
+      }
+      
+      function drawChart10() {
+	  	var height = 350;
+   		var width = 350;
+		var testdata = [
+     {% for e in class_selection_list_air %}
+        {key: '{{ e.class_selection }}', y: {{ e.count_class_selection }}},
+        {% endfor %}
+    ];
+
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart10")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
       }
 	  
-	  function drawChart8() {
+	  function drawChart11() {
+	  	var height = 350;
+   		var width = 350;
+		var testdata = [
+     {% for e in berth_list_air %}
+        {key: '{{ e.berth_selection }}', y: {{ e.count_berth }}},
+        {% endfor %}
+    ];
+
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.key })
+            .y(function(d) { return d.y })
+            .width(width)
+            .height(height);
+
+        d3.select("#piechart11")
+            .datum(testdata)
+            .attr('width', width)
+            .attr('height', height)
+            .call(chart);
+        return chart;
+    });
+      }
+      
+	  function drawChart12() {
+		  var chart;
+
+    nv.addGraph(function() {
+		yearlyStatsData= [
+            {
+               values:[
+					{% for e in number_of_journeys_in_a_year_air %}
+			        	{x:{{e.year}}, y:{{e.all_from}}},
+        			{% endfor %}
+				],
+                key: "Plane Journyes",
+                color: "#A80000"
+            }
+            ,
+            {
+                values:[
+					{% for e in number_of_journeys_in_a_year %}
+			        	{x:{{e.year}}, y:{{e.all_from}}},
+        			{% endfor %}
+				],
+                key: "Train Journeys",
+                color: "#33CC33"
+            }
+        ];
+        chart = nv.models.lineChart()
+            .options({
+                useInteractiveGuideline: true
+            })
+        ;
+
+        // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+        chart.xAxis
+            .axisLabel("Year")
+            .staggerLabels(false)
+        ;
+
+        chart.yAxis
+            .axisLabel('Journeys')
+        ;
+
+        d3.select('#bargraph1').append('svg')
+            .datum(yearlyStatsData)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+    });
+      }
+	  
+	  function drawChart13() {
 	  	var height = 1000;
    		var width = 500;
 		  monthlyStatsData = [
@@ -241,7 +400,7 @@
     });
       }
 	  
-	  function drawChart9() {
+	  function drawChart14() {
 	  	var height = 1000;
    		var width = 500;
 		   historicalBarChart = [
@@ -294,8 +453,7 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/entry/add_entry/">Add a Journey</a></li>
                 <li><a href="/journeys/records/">Records</a></li>
-                <li class="active"><a href="/journeys/">Train Statistics</a></li>
-                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
+                <li class="active"><a href="/journeys/">Statistics</a></li>
                 <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
 				{% if user.is_authenticated %}
 					 <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
@@ -371,7 +529,14 @@
 					</div>
 				</div>
             </div>
-		  
+            
+            <div class="page-header">
+      		</div>
+		  	<div class="panel panel-info">
+        		<div class="panel-heading">
+					<h1>On the rails</h1>
+				</div>
+			</div>
 			<div class="row">
 				<div id="inner-left" class="col-lg-4">
 					<div class="panel panel-info">
@@ -405,7 +570,6 @@
 					</div>
 				</div>
 			</div>
-		  	
 			<div class="row">
 				<div id="inner-left" class="col-lg-4">
 					<div class="panel panel-info">
@@ -439,19 +603,80 @@
 				</div>
 			</div>
 			
-			
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<h3>Time-line of your travels by year</h3>
+			<div class="page-header">
+      		</div>
+		  	<div class="panel panel-info">
+        		<div class="panel-heading">
+					<h1>In The Air</h1>
 				</div>
-				<div class="panel-body">
-					<div class="row">
-						<div id="bargraph1" style="width: 100%; height: 500px"></div>	
+			</div>
+      		
+      		<div class="row">
+				<div id="inner-left" class="col-lg-4">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Carrier Selections</h3>
+						</div>
+					<div class="panel-body">
+						<svg id="piechart7" class="mypiechart"></svg>
+					</div>
+					</div>
+				</div>
+				<div id="inner-centre" class="col-lg-4">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Top Source Stations</h3>
+						</div>
+						<div class="panel-body">
+							<svg id="piechart8" class="mypiechart"></svg>
+						</div>
+					</div>
+				</div>
+				<div id="inner-right" class="col-lg-4">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Top Destinations</h3>
+						</div>
+						<div class="panel-body">
+							<svg id="piechart9" class="mypiechart"></svg>
+						</div>
+					</div>
+				</div>
+			</div>
+      		
+      		<div class="row">
+				<div id="inner-left" class="col-lg-6">
+					<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3>Class Preferences</h3>
+					</div>
+					<div class="panel-body">
+						<svg id="piechart10" class="mypiechart"></svg>
+					</div>
+					</div>
+				</div>
+				<div id="inner-right" class="col-lg-6">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h3>Berth Fortunes</h3>
+						</div>
+						<div class="panel-body">
+							<svg id="piechart11" class="mypiechart"></svg>
+						</div>
 					</div>
 				</div>
 			</div>
 			
-			
+      		<div class="row">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3>Time-line of your travels by year</h3>
+					</div>
+					<div class="panel-body">
+						<svg style="height:400px; vertical-align:center;" id="bargraph1"></svg>	
+					</div>
+				</div>
+			</div>		
 			
 			<div class="row">
 				<div id="inner-left" class="col-lg-6">
@@ -483,10 +708,6 @@
           </div>
 
         </div>
-		{% else %}
-		<div class="inner cover">
-			<h1>Please login</h1> 
-		</div>
 		{% endif %}
       </div>
 

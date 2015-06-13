@@ -75,7 +75,10 @@ def register(request):
 def user_login(request):
     # Like before, obtain the context for the user's request.
     context = RequestContext(request)
-
+    
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/journeys/')
+        
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         # Gather the username and password provided by the user.
@@ -127,3 +130,10 @@ def home(request):
                             'user': request.user})
    return render_to_response('login/home.html',
                              context_instance=context)
+   
+def profile(request):
+    context = RequestContext(request)
+    context_dict = {'name' : request.user.username}
+    profile = request.user.get_profile()
+    print str(profile)
+    return render_to_response('login/profile.html', context_dict, context)
