@@ -14,8 +14,8 @@
 <link href="{% static "css/traveldataentry.css" %}" rel="stylesheet">
 
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script> 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script>
-<title>MyTravelogue: {{name}}'s journey from {{entries.from_airport}} to {{entries.to_airport}}</title>  	  
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_Tg3D8gm1S4YoqAH65i_HENA75UePGUk&sensor=false"> </script> 
+<title>Travelogue | Trip from {{entries.from_airport}} to {{entries.to_airport}}...</title>	  
 </head>
 <body style="text-align: center;">
 	<div id="fb-root"></div>
@@ -37,8 +37,7 @@
 			  	<li><a href="/">Home</a></li>
                 <li><a href="/entry/add_entry/">Add a Journey</a></li>
                 <li class="active" ><a href="/journeys/records/">Records</a></li>
-                <li><a href="/journeys/">Train Statistics</a></li>
-                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
+                <li><a href="/journeys/">Statistics</a></li>
 				<li><a href="/entry/">Logout</a></li>
 			  {% else %}
 				<li><a href="/login/register/">Register Here</a></li>
@@ -118,7 +117,9 @@
     			[{{route_from.station_lat}},{{route_from.station_long}}],
     				[{{route_to.station_lat}},{{route_to.station_long}}]
 		];
-
+		
+		
+  
         function addAnimatedPolyline () {
             //First we iterate over the coordinates array to create a
             // new array which includes objects of LatLng class.
@@ -171,7 +172,6 @@
         function initMap() {
             //Enabling new cartography and themes
             google.maps.visualRefresh = true;
-
             //Setting starting options of map
             var mapOptions = {
                 scrollwheel:false,
@@ -184,7 +184,28 @@
 
             //Creating a map with DOM element which is just obtained
             map = new google.maps.Map(mapElement, mapOptions);
-
+			
+			var bounds = new google.maps.LatLngBounds();
+			
+			var Latlng_source = new google.maps.LatLng({{route_from.station_lat}},{{route_from.station_long}});
+			var Latlng_dest = new google.maps.LatLng({{route_to.station_lat}},{{route_to.station_long}});
+			
+			var marker_source = new google.maps.Marker({
+	      		position: Latlng_source,
+	      		map: map,
+	      		title: "{{entries.from_airport}}"
+	  		});
+			bounds.extend(Latlng_source);
+			map.fitBounds(bounds);
+			
+			var marker_dest = new google.maps.Marker({
+	      		position: Latlng_dest,
+	      		map: map,
+	      		title: "{{entries.to_airport}}"
+	  		});
+  			bounds.extend(Latlng_dest);
+			map.fitBounds(bounds);
+			
             addAnimatedPolyline();
         }
 
