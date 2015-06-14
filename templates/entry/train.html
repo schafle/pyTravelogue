@@ -45,8 +45,7 @@ h1.hidden {
                 <li><a href="/">Home</a></li>
                 <li class="active"><a href="#">Add a Journey</a></li>
                 <li><a href="/journeys/records">Records</a></li>
-                <li><a href="/journeys/">Train Statistics</a></li>
-                <li><a href="/journeys/air_travel">Plane Statistics</a></li>
+                <li><a href="/journeys/">Statistics</a></li>
                 {% if user.is_authenticated %}
 					 <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
 				{% else %}

@@ -25,8 +25,7 @@ def index(request):
 		# Order the categories by no. likes in descending order.
 		# Retrieve the top 5 only - or all if less than 5.
 		# Place the list in our context_dict dictionary which will be passed to the template engine.
-		stations_list=Station.objects.all()
-		lat_long_list_of_stations=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code")
+		lat_long_list_of_stations=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code and entry_entries.username='"+request.user.username+"' GROUP BY station_code")
 		journey_list=Entries.objects.values('train_name').filter(username=request.user.username).annotate(dcount=Count('train_name'))
 		to_station_list=Entries.objects.values('to_station').filter(username=request.user.username).annotate(count_to_stations=Count('to_station'))
 		from_station_list=Entries.objects.values('from_station').filter(username=request.user.username).annotate(count_from_stations=Count('from_station'))
@@ -79,7 +78,7 @@ def index(request):
 				
 		total_number_of_journeys=Entries.objects.filter(username=request.user.username).count()
 		travelogue_rank_distance=1
-		total_distance_travelled, longest_journey,average_length_of_journeys = _calculate_distance_covered(request)
+		total_distance_travelled, longest_journey,average_length_of_journeys = _calculate_distance_covered(request, request.user.username)
 		
 		context_dict = {
 		'name' : request.user.username,
@@ -103,7 +102,7 @@ def index(request):
 		}
 		
 		'''Filling air travel details'''
-		distance_covered_air, longest_journey_air, average_distance_covered_air, total_number_of_journeys_air = _calculate_air_distance_covered(request)
+		distance_covered_air, longest_journey_air, average_distance_covered_air, total_number_of_journeys_air = _calculate_air_distance_covered(request, request.user.username)
 		number_of_places_air=AirEntries.objects.values('to_airport').filter(username=request.user.username).distinct().count()
 		serviceProviders=AirEntries.objects.values('ServiceProvider').filter(username=request.user.username).annotate(dcount=Count('ServiceProvider'))
 		to_airport_list=AirEntries.objects.values('to_airport').filter(username=request.user.username).annotate(count_to_stations=Count('to_airport'))
@@ -113,9 +112,10 @@ def index(request):
 		number_of_journeys_in_a_year_air=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_airentries where username='"+request.user.username+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 		number_of_journeys_in_a_month_air=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_airentries where username='"+request.user.username+"' group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
 		number_of_journeys_in_a_weekday_air=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_airentries where username='"+request.user.username+"' group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
-		
+		lat_long_list_of_stations_air=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_airport join entry_airentries where entry_airentries.from_airport=journeys_airport.station_code and entry_airentries.username='"+request.user.username+"' GROUP BY station_code")
 		
 		context_dict['total_distance_travelled'] = context_dict['total_distance_travelled']+distance_covered_air
+		context_dict['total_number_of_journeys'] = context_dict['total_number_of_journeys']+total_number_of_journeys_air
 		if context_dict['longest_journey'] < longest_journey_air:
 			context_dict['longest_journey'] = longest_journey_air
 		context_dict['serviceProviders'] = serviceProviders
@@ -126,7 +126,7 @@ def index(request):
 		context_dict['berth_list_air'] = berth_list_air
 		context_dict['class_selection_list_air'] = class_selection_list_air
 		context_dict['number_of_journeys_in_a_year_air'] = number_of_journeys_in_a_year_air
-		
+		context_dict['lat_long_list_of_stations_air'] = lat_long_list_of_stations_air
 		'''ToDo'''
 		'''Monthly stats with addition of plane journeys'''
 		'''for dict in number_of_journeys_in_a_month_air:
@@ -155,29 +155,65 @@ def user(request,user_name_url):
 
 	current_user=user_name_url
     
-	# Query the database for a list of ALL categories currently stored.
+    # Query the database for a list of ALL categories currently stored.
 	# Order the categories by no. likes in descending order.
 	# Retrieve the top 5 only - or all if less than 5.
 	# Place the list in our context_dict dictionary which will be passed to the template engine.
-	stations_list=Station.objects.all()
-	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code GROUP BY station_code")
+	lat_long_list_of_stations=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_station join entry_entries where entry_entries.from_station=journeys_station.station_code and entry_entries.username='"+current_user+"' GROUP BY station_code")
 	journey_list=Entries.objects.values('train_name').filter(username=current_user).annotate(dcount=Count('train_name'))
 	to_station_list=Entries.objects.values('to_station').filter(username=current_user).annotate(count_to_stations=Count('to_station'))
 	from_station_list=Entries.objects.values('from_station').filter(username=current_user).annotate(count_from_stations=Count('from_station'))
 	class_selection_list=Entries.objects.values('class_selection').filter(username=current_user).annotate(count_class_selection=Count('class_selection'))
 	berth_list=Entries.objects.values('berth_selection').filter(username=current_user).annotate(count_berth=Count('berth_selection'))
+	train_types_dict_list=train_types(journey_list)
 	number_of_places=Entries.objects.values('to_station').filter(username=current_user).distinct().count()
 	name_of_places=Entries.objects.values('to_station').filter(username=current_user).distinct()
 	number_of_trains=Entries.objects.values('train_name').filter(username=current_user).distinct().count()
-	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries where username='"+request.user.username+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
-	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries where username='"+request.user.username+"' group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
-	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries where username='"+request.user.username+"'group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
-	total_number_of_journeys=Entries.objects.filter(username=current_user).count()
-	total_distance_travelled, longest_journey,average_length_of_journeys = _calculate_distance_covered(request)
+	number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_entries where username='"+current_user+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
+
+	journeys_by_months_dict_list=[
+								{'all_from':0, 'months':'January'},
+								{'all_from':0, 'months':'February'},
+								{'all_from':0, 'months':'March'},
+								{'all_from':0, 'months':'April'},
+								{'all_from':0, 'months':'May'},
+								{'all_from':0, 'months':'June'},
+								{'all_from':0, 'months':'July'},
+								{'all_from':0, 'months':'August'},
+								{'all_from':0, 'months':'September'},
+								{'all_from':0, 'months':'October'},
+								{'all_from':0, 'months':'November'},
+								{'all_from':0, 'months':'December'},
+								]
+	number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_entries where username='"+current_user+"' group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
+	for dict in number_of_journeys_in_a_month:
+		index=0
+		for dict_jnw in journeys_by_months_dict_list:
+			if dict['months'] == dict_jnw['months']:
+				dict_jnw['all_from'] = dict['all_from']
+			index+=1
 	
-	travelogue_rank_count=3
-	travelogue_rank_distance=1		
-	train_types_dict_list=train_types(journey_list)
+	journeys_by_weekdays_dict_list=[
+								{'all_from':0, 'days':'Sunday'},
+								{'all_from':0, 'days':'Monday'}, 
+								{'all_from':0, 'days':'Tuesday'}, 
+								{'all_from':0, 'days':'Wednesday'}, 
+								{'all_from':0, 'days':'Thursday'}, 
+								{'all_from':0, 'days':'Friday'}, 
+								{'all_from':0, 'days':'Saturday'}
+							]
+	number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_entries where username='"+current_user+"' group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
+	for dict in number_of_journeys_in_a_weekday:
+		index=0
+		for dict_jnw in journeys_by_weekdays_dict_list:
+			if dict['days'] == dict_jnw['days']:
+				dict_jnw['all_from'] = dict['all_from']
+			index+=1
+			
+	total_number_of_journeys=Entries.objects.filter(username=current_user).count()
+	travelogue_rank_distance=1
+	total_distance_travelled, longest_journey,average_length_of_journeys = _calculate_distance_covered(request, current_user)
+	
 	context_dict = {
 	'name' : current_user,
 	'entries':journey_list, 
@@ -187,10 +223,10 @@ def user(request,user_name_url):
 	'berths':berth_list, 
 	'number_of_places':number_of_places, 
 	'number_of_trains':number_of_trains,
-	'total_distance_travelled':total_distance_travelled,
+	'total_distance_travelled':total_distance_travelled, 
 	'number_of_journeys_in_a_year':number_of_journeys_in_a_year,
-	'number_of_journeys_in_a_month':number_of_journeys_in_a_month,
-	'number_of_journeys_in_a_weekday':number_of_journeys_in_a_weekday,
+	'number_of_journeys_in_a_month':journeys_by_months_dict_list,
+	'number_of_journeys_in_a_weekday':journeys_by_weekdays_dict_list,
 	'longest_journey':longest_journey,
 	'total_number_of_journeys':total_number_of_journeys,
 	'average_length_of_journeys':average_length_of_journeys,
@@ -198,7 +234,54 @@ def user(request,user_name_url):
 	'train_types_dict':train_types_dict_list,
 	'lat_long_list_of_stations':lat_long_list_of_stations,
 	}
-
+	
+	'''Filling air travel details'''
+	distance_covered_air, longest_journey_air, average_distance_covered_air, total_number_of_journeys_air = _calculate_air_distance_covered(request, current_user)
+	number_of_places_air=AirEntries.objects.values('to_airport').filter(username=current_user).distinct().count()
+	serviceProviders=AirEntries.objects.values('ServiceProvider').filter(username=current_user).annotate(dcount=Count('ServiceProvider'))
+	to_airport_list=AirEntries.objects.values('to_airport').filter(username=current_user).annotate(count_to_stations=Count('to_airport'))
+	from_airport_list=AirEntries.objects.values('from_airport').filter(username=current_user).annotate(count_from_stations=Count('from_airport'))
+	class_selection_list_air=AirEntries.objects.values('class_selection').filter(username=current_user).annotate(count_class_selection=Count('class_selection'))
+	berth_list_air=AirEntries.objects.values('berth_selection').filter(username=current_user).annotate(count_berth=Count('berth_selection'))
+	number_of_journeys_in_a_year_air=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_airentries where username='"+current_user+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
+	number_of_journeys_in_a_month_air=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_airentries where username='"+current_user+"' group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
+	number_of_journeys_in_a_weekday_air=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_airentries where username='"+current_user+"' group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
+	lat_long_list_of_stations_air=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_airport join entry_airentries where entry_airentries.from_airport=journeys_airport.station_code and entry_airentries.username='"+current_user+"' GROUP BY station_code")
+	
+	context_dict['total_distance_travelled'] = context_dict['total_distance_travelled']+distance_covered_air
+	if context_dict['longest_journey'] < longest_journey_air:
+		context_dict['longest_journey'] = longest_journey_air
+	context_dict['serviceProviders'] = serviceProviders
+	context_dict['number_of_copanies']=len(serviceProviders)
+	context_dict['number_of_places'] = context_dict['number_of_places'] + number_of_places_air
+	context_dict['to_airport_list'] = to_airport_list
+	context_dict['from_airport_list'] = from_airport_list
+	context_dict['berth_list_air'] = berth_list_air
+	context_dict['class_selection_list_air'] = class_selection_list_air
+	context_dict['number_of_journeys_in_a_year_air'] = number_of_journeys_in_a_year_air
+	context_dict['lat_long_list_of_stations_air'] = lat_long_list_of_stations_air
+	'''ToDo'''
+	'''Monthly stats with addition of plane journeys'''
+	'''for dict in number_of_journeys_in_a_month_air:
+		if month in number_of_journeys_in_a_month.keys():
+			number_of_journeys_in_a_month[month]=number_of_journeys_in_a_month[month]+number_of_journeys_in_a_month_air[month]
+	'''
+	'''Weekly stats with addition of plane journeys'''
+	'''for weekday, count in number_of_journeys_in_a_weekday_air:
+		if weekday in number_of_journeys_in_a_weekday.keys():
+			number_of_journeys_in_a_weekday[weekday]=number_of_journeys_in_a_weekday[weekday]+number_of_journeys_in_a_weekday_air[weekday]		
+	
+	context_dict['number_of_journeys_in_a_month'] = number_of_journeys_in_a_month
+	context_dict['number_of_journeys_in_a_weekday'] = number_of_journeys_in_a_weekday'''
+	# Return a rendered response to send to the client.
+	# We make use of the shortcut function to make our lives easier.
+	# Note that the first parameter is the template we wish to use.
+	#print( str(context_dict))
+	# Query the database for a list of ALL categories currently stored.
+	# Order the categories by no. likes in descending order.
+	# Retrieve the top 5 only - or all if less than 5.
+	# Place the list in our context_dict dictionary which will be passed to the template engine.
+	
 	# Return a rendered response to send to the client.
 	# We make use of the shortcut function to make our lives easier.
 	# Note that the first parameter is the template we wish to use.
@@ -224,8 +307,9 @@ def air_travel(request):
 		number_of_journeys_in_a_year=query_to_dicts("select (select year(date_of_journey)) as year, count(*) as all_from from entry_airentries where username='"+request.user.username+"' group by (select year(date_of_journey)) order by (select year(date_of_journey))")
 		number_of_journeys_in_a_month=query_to_dicts("select (select monthname(date_of_journey)) as months, count(*) as all_from from entry_airentries where username='"+request.user.username+"' group by (select monthname(date_of_journey)) order by (select month(date_of_journey))")
 		number_of_journeys_in_a_weekday=query_to_dicts("select (select dayname(date_of_journey)) as days, count(*) as all_from from entry_airentries where username='"+request.user.username+"' group by (select dayname(date_of_journey)) order by (select dayofweek(date_of_journey))")
-	
+		lat_long_list_of_stations_air=query_to_dicts("select station_name, count(*) as visits, station_lat, station_long from journeys_airport join entry_airentries where entry_airentries.from_airport=journeys_airport.station_code GROUP BY station_code")
 		context_dict = {
+						'lat_long_list_of_stations_air':lat_long_list_of_stations_air,
 						'total_distance_travelled':distance_covered,
 						'longest_journey':longest_journey,
 						'average_distance_covered':average_distance_covered,
@@ -371,9 +455,9 @@ def train_distance_covered(train, from_station, to_station):
 		return 0
 	return distance_covered
 	
-def _calculate_distance_covered(request):
+def _calculate_distance_covered(request, user):
 	'''Returns the total distance travelled '''
-	journey_list=Entries.objects.values('train_name', 'from_station', 'to_station').filter(username=request.user.username)
+	journey_list=Entries.objects.values('train_name', 'from_station', 'to_station').filter(username=user)
 	total_distance_covered = 0
 	maximum_distance_covered = 0
 	for journey in journey_list:
@@ -384,18 +468,20 @@ def _calculate_distance_covered(request):
 		total_distance_covered += distance_covered_in_this_journey
 		if maximum_distance_covered < distance_covered_in_this_journey:
 			maximum_distance_covered = distance_covered_in_this_journey
-		
+	
+	print(journey_list)	
 	average_length_of_journey = total_distance_covered/len(journey_list)
+	
 	return (total_distance_covered, maximum_distance_covered, average_length_of_journey)
 
-def _calculate_air_distance_covered(request):
+def _calculate_air_distance_covered(request, user):
 	"""
 	Calculate the great circle distance between two points 
 	on the earth (specified in decimal degrees)
 	"""
 	distance_covered = 0
 	longest_journey = 0
-	journey_list=AirEntries.objects.values('from_airport', 'to_airport').filter(username=request.user.username)
+	journey_list=AirEntries.objects.values('from_airport', 'to_airport').filter(username=user)
 	
 	for journey in journey_list:
 		_from = journey['from_airport']

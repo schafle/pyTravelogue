@@ -724,6 +724,14 @@ citymap['{{e.station_name}}'] = {
 };
 {%endfor%}
 
+var citymap2 = {};
+{% for e in lat_long_list_of_stations_air %}
+citymap2['{{e.station_name}}'] = {
+  center: new google.maps.LatLng({{e.station_lat}}, {{e.station_long}}),
+  population: {{e.visits}}*100000
+};
+{%endfor%}
+
 var cityCircle;
 
 function initialize() {
@@ -732,7 +740,7 @@ function initialize() {
     zoom: 5,
   	scrollwheel:false,
   	center: new google.maps.LatLng(22.830852, 80.278573),
-  	mapTypeId: google.maps.MapTypeId.HYBRID 
+  	mapTypeId: google.maps.MapTypeId.ROADMAP 
   };
 
   var map = new google.maps.Map(document.getElementById('map-canvas'),
@@ -742,22 +750,55 @@ function initialize() {
   // Note: We scale the area of the circle based on the population.
   for (var city in citymap) {
     var populationOptions = {
-      strokeColor: '#FF0000',
+      strokeColor: '#000000',
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: '#FF0000',
+      fillColor: '#FF0040',
       fillOpacity: 0.35,
       map: map,
+      title:city,
       center: citymap[city].center,
       radius: Math.sqrt(citymap[city].population) * 100
     };
     // Add the circle for this city to the map.
     cityCircle = new google.maps.Circle(populationOptions);
+        // Add event listener to every circle created to show the name of the place
+    google.maps.event.addListener(cityCircle,'mouseover',function(){
+     this.getMap().getDiv().setAttribute('title',this.get('title'));});
+
+	google.maps.event.addListener(cityCircle,'mouseout',function(){
+     this.getMap().getDiv().removeAttribute('title');});
   }
-}
+  
+  for (var city in citymap2) {
+    var populationOptions = {
+      strokeColor: '#000000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#2EFE2E",
+      fillOpacity: 0.35,
+      map: map,
+      title:city,
+      center: citymap2[city].center,
+      radius: Math.sqrt(citymap2[city].population) * 100
+    };
+    // Add the circle for this city to the map.
+    cityCircle = new google.maps.Circle(populationOptions);
+    
+    // Add event listener to every circle created to show the name of the place
+    google.maps.event.addListener(cityCircle,'mouseover',function(){
+     this.getMap().getDiv().setAttribute('title',this.get('title'));});
+
+	google.maps.event.addListener(cityCircle,'mouseout',function(){
+     this.getMap().getDiv().removeAttribute('title');});
+  }
+
+ }
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
+
+     
 </script>
 </body>
 </html>

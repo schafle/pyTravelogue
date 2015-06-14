@@ -379,7 +379,7 @@
 <script>
 // First, create an object containing LatLng and population for each city.
 var citymap = {};
-{% for e in lat_long_list_of_stations %}
+{% for e in lat_long_list_of_stations_air %}
 citymap['{{e.station_name}}'] = {
   center: new google.maps.LatLng({{e.station_lat}}, {{e.station_long}}),
   population: {{e.visits}}*100000
