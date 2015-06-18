@@ -23,7 +23,7 @@ def train(request):
 			form.save(commit=True)
 			# Now call the index() view.
 			# The user will be shown the homepage.
-			return HttpResponseRedirect('/journeys/')
+			print form.errors
 		else:
 			# The supplied form contained errors - just print them to the terminal.
 			print form.errors	
@@ -58,7 +58,7 @@ def air(request):
 
             # Now call the index() view.
             # The user will be shown the homepage.
-            return HttpResponseRedirect('/journeys/air_travel/')
+            return HttpResponseRedirect('/journeys/')
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -92,16 +92,16 @@ def get_source_dest_list(starts_with=''):
 	if starts_with != '' and starts_with != ' ':
 		starts_with=str(starts_with)
 		starts_with = starts_with.replace("%[0-9/]" , " ")
-		print(starts_with)
+		#print(starts_with)
 		source_dest_list=[]
 		cursor = connection.cursor()
 		cursor.execute("select train_route from journeys_train where train_name='"+starts_with+"'")
 		source_dest_list = cursor.fetchall()
-		print(source_dest_list)
+		#print(source_dest_list)
 		#source_dest_list=Train.objects.filter(Q(train_route=starts_with))
 		source_dest_str=str(source_dest_list[0][0])
 		source_dest_list=source_dest_str.split(":")
-		print(source_dest_list)
+		#print(source_dest_list)
 		index=0		
 		source_dest_dict=collections.OrderedDict()
 		while index < len(source_dest_list):

@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title> Travelogue | Profile </title>
+{% load static %} <!-- New line -->
+<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+
+<!-- Custom styles for this template -->
+<link href="{% static "css/traveldataentry.css" %}" rel="stylesheet">
+
+</style>
+</head>
+<body style="width: 90%;">
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">			  
+			  {% if user.is_authenticated %}
+					<h3 class="masthead-brand">Hello {{name}} !</h3>
+				{% else %}
+					<h3 class="masthead-brand">Hello NotLoggedInUser !</h3>
+				{% endif %}
+              <ul class="nav masthead-nav">
+                <li class="active"><a href="/profile">Profile</a></li>
+                <li><a href="#">Add a Journey</a></li>
+                <li><a href="/journeys/records">Records</a></li>
+                <li><a href="/journeys/">Statistics</a></li>
+                <!-- <li><a href="DisplayLocationController">Locations</a></li> -->
+                {% if user.is_authenticated %}
+					 <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
+				{% else %}
+					<li><a href="/login/register/">Register Here</a></li>
+					<li><a href="/login/login/">Login</a></li>
+				{% endif %}
+              </ul>
+            </div>
+          </div>
+
+         <div class="inner cover">
+         	<div class="row" style="padding-bottom: 30px;">
+         		<h1 style="text-align: center;">Terms of Service</h1>
+         	</div>
+         	<div class="row" style="margin: 10px 10px 10px 10px;">
+				<h3>DESCRIPTION</h3>
+				<p><i>journeytracker.in</i> is a service for traveling enthusiasts who want to keep a record of journey they have done.
+				Members of <i>journeytracker.in</i> have their own profile where statistics of the members journey are shown, to keep the tracking as simple as possible.
+				<i>journeytracker.in</i> is aimed to serve passengers who want to keep track of their journey.</p>
+
+				<h3>PRIVACY POLICY</h3>
+				<p><i>journeytracker.in</i> will keep your information accurate, secure and private and we will never transfer any information or data to any third party.
+				<i>journeytracker.in</i> collects and saves this data at the time of registration for the use of our services:
+				<ol>
+					<li>Your name</li>
+					<li>Your e-mail address</li>
+				</ol>
+				</p>
+				
+				<h3>RULES AND REGULATIONS</h3>
+				<p>Once registered to <i>journeytracker.in</i> you will get access to your own personal journeys page. You can manage all of your journeys, delete and add a new journey. What information you add is up to yourself to decide.
+				You may add as many journeys you want but you may not abuse the system such as adding unrealistic journeys and you must not add any hypothetical journey, the purpose of <i>journeytracker.in</i> is to track real journeys.
+				</p>
+				
+				<h3>NOT FOLLOWING THE RULES</h3>
+				<p>Not following the rules will have consequences. You will be warned, or ultimately banned. In more alarming situations your user account will be deleted and/or your Internet service provider may also be contacted.
+				If you are being contacted by one of our staff, it is recommended that you obey their wishes and recommendations. We are here to keep a friendly environment, so please respect our wishes. If you have any comments about the work or decisions of the staff, please contact us via the contact form.
+				</p>
+				
+				<h3>ADVERTISING POLICY</h3>
+				<p>If you wish to receive more information about future advertisement possibilities at our WebSite, please contact us. For the moment, we are completely ad-free.</p>
+					
+				<h3>TERMINATION OF ACCOUNT</h3>
+				<p>If a user wishes to delete his or her account, he or she may request this using our contact form. This can be done at any time.
+				In the case of termination of an account, all information will be deleted, including all of your journeys.</p>
+					
+				<h3>COPYRIGHT</h3>
+				<p>When register to <i>journeytracker.in</i> you agree not to copy, distribute, transfer or modify our work.</p>
+					
+				<h3>COSTS AND CONTRIBUTION</h3>
+				<p><i>journeytracker.in</i> is completely free of charge.</p>
+					
+				<h3>DISCLAIMER</h3>
+				<p><i>journeytracker.in</i> reserves itself for any changes or updates of these terms and conditions. In an event of a major update users will be contacted.</p>
+         	</div>
+          </div>
+        </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p style="color: green">Copyrights Reserved</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+</body>
+</html>

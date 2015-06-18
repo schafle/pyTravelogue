@@ -137,3 +137,11 @@ def profile(request):
     profile = request.user.get_profile()
     print str(profile)
     return render_to_response('login/profile.html', context_dict, context)
+
+def terms_of_service(request):
+    context = RequestContext(request)
+    return render_to_response('login/terms_of_service.html', {}, context)
+
+def privacy_policy(request):
+    context = RequestContext(request)
+    return render_to_response('login/privacy_policy.html', {}, context)
