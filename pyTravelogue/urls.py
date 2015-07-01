@@ -22,6 +22,11 @@ urlpatterns = patterns('',
 	url(r'^user/(?P<user_name_url>\w+)/$', views.user, name='user'),
 	url(r'^profile/', 'login.views.profile'),
 	#url(r'^$', 'login.views.user_login', name='home'), #make this the home page
+	
+	#Api development for travelogue
+	url(r'^api/', include('entry.api_urls')),
+	
+	#django social app
 	url('', include('social.apps.django_app.urls', namespace='social')),
 	url('', include('social.apps.django_app.urls', namespace='auth')),
 )
